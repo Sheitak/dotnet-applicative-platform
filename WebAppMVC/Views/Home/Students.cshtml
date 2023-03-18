@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "Students Page";
+    //var data = (Student) ViewData["Student"];
+    var students = (List<Student>) ViewData["Students"];
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <ul>
+        @foreach (var student in @students)
+        {
+            <li>@student.Firstname</li>
+            <li>@student.Lastname</li>
+            <li>@student.Group</li>
+        }
+    </ul>
+</div>
