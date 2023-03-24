@@ -1,6 +1,6 @@
-﻿namespace WebAPI.Models
+﻿namespace WebAPI.Models.DTO
 {
-    public class Group
+    public class GroupDTO
     {
         public int GroupID { get; set; }
 

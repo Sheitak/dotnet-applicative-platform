@@ -49,7 +49,7 @@ namespace WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPromotion(int id, Promotion promotion)
         {
-            if (id != promotion.Id)
+            if (id != promotion.PromotionID)
             {
                 return BadRequest();
             }
@@ -87,7 +87,7 @@ namespace WebAPI.Controllers
             _context.Promotions.Add(promotion);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPromotion", new { id = promotion.Id }, promotion);
+            return CreatedAtAction("GetPromotion", new { id = promotion.PromotionID }, promotion);
         }
 
         // DELETE: api/Promotions/5
@@ -112,7 +112,7 @@ namespace WebAPI.Controllers
 
         private bool PromotionExists(int id)
         {
-            return (_context.Promotions?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Promotions?.Any(e => e.PromotionID == id)).GetValueOrDefault();
         }
     }
 }

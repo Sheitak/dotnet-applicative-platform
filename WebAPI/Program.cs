@@ -15,6 +15,7 @@ builder.Services.AddDbContext<SignatureContext>(
         builder.Configuration.GetConnectionString("DBConnection")
     )
 );
+builder.Services.AddScoped<DbInitializer>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -45,6 +46,9 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    // Custom extension method to seed the DB
+    app.UseItToSeedSqlServer();
+
     app.UseSwagger();
     app.UseSwaggerUI(options =>
     {

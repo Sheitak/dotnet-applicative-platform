@@ -1,8 +1,8 @@
-﻿namespace WebAPI.Models
+﻿namespace WebAPI.Models.DTO
 {
-    public class Group
+    public class PromotionDTO
     {
-        public int GroupID { get; set; }
+        public int PromotionID { get; set; }
 
         public string Name { get; set; }
 

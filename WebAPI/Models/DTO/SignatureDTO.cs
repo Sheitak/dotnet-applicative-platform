@@ -1,11 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace WebAPI.Models
+namespace WebAPI.Models.DTO
 {
-    public class Signature
+    public class SignatureDTO
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int SignatureID { get; set; }
 
         [Required]

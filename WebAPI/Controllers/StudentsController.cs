@@ -97,7 +97,7 @@ namespace WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> PutStudent(int id, StudentDTO studentDTO)
         {
-            if (id != studentDTO.Id)
+            if (id != studentDTO.StudentID)
             {
                 return BadRequest();
             }
@@ -113,6 +113,7 @@ namespace WebAPI.Controllers
             student.Firstname = studentDTO.Firstname;
             student.Lastname = studentDTO.Lastname;
             student.Group = studentDTO.Group;
+            student.Promotion = studentDTO.Promotion;
 
             try
             {
@@ -163,7 +164,8 @@ namespace WebAPI.Controllers
             {
                 Firstname = studentDTO.Firstname,
                 Lastname = studentDTO.Lastname,
-                Group = studentDTO.Group
+                Group = studentDTO.Group,
+                Promotion = studentDTO.Promotion
             };
 
             _context.Students.Add(student);
@@ -171,7 +173,7 @@ namespace WebAPI.Controllers
 
             return CreatedAtAction(
                 nameof(GetStudent),
-                new { id = student.Id },
+                new { id = student.StudentID },
                 StudentToDTO(student)
             );
         }
@@ -208,15 +210,18 @@ namespace WebAPI.Controllers
 
         private bool StudentExists(int id)
         {
-            return (_context.Students?.Any(s => s.Id == id)).GetValueOrDefault();
+            return (_context.Students?.Any(s => s.StudentID == id)).GetValueOrDefault();
         }
 
         private static StudentDTO StudentToDTO(Student student) => new()
         {
-            Id = student.Id,
+            StudentID = student.StudentID,
             Firstname = student.Firstname,
             Lastname = student.Lastname,
-            Group = student.Group
+            GroupID = student.GroupID,
+            Group = student.Group,
+            PromotionID = student.PromotionID,
+            Promotion = student.Promotion
         };
     }
 }

@@ -54,7 +54,7 @@ namespace WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutGroup(int id, Group @group)
         {
-            if (id != @group.Id)
+            if (id != @group.GroupID)
             {
                 return BadRequest();
             }
@@ -92,7 +92,7 @@ namespace WebAPI.Controllers
             _context.Groups.Add(@group);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetGroup", new { id = @group.Id }, @group);
+            return CreatedAtAction("GetGroup", new { id = @group.GroupID }, @group);
         }
 
         // DELETE: api/Groups/5
@@ -117,7 +117,7 @@ namespace WebAPI.Controllers
 
         private bool GroupExists(int id)
         {
-            return (_context.Groups?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Groups?.Any(e => e.GroupID == id)).GetValueOrDefault();
         }
     }
 }

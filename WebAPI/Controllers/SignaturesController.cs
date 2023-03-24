@@ -54,7 +54,7 @@ namespace WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSignature(int id, Signature signature)
         {
-            if (id != signature.Id)
+            if (id != signature.StudentID)
             {
                 return BadRequest();
             }
@@ -92,7 +92,7 @@ namespace WebAPI.Controllers
             _context.Signatures.Add(signature);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetSignature", new { id = signature.Id }, signature);
+            return CreatedAtAction("GetSignature", new { id = signature.SignatureID }, signature);
         }
 
         // DELETE: api/Signatures/5
@@ -117,7 +117,7 @@ namespace WebAPI.Controllers
 
         private bool SignatureExists(int id)
         {
-            return (_context.Signatures?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Signatures?.Any(e => e.StudentID == id)).GetValueOrDefault();
         }
     }
 }
