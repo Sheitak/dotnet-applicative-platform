@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Models;
 using WebAPI.Models.DTO;
@@ -49,6 +50,7 @@ namespace WebAPI.Controllers
         /// <response code="201">Returns the specific student correctly</response>
         /// <response code="400">If the student is null</response>
         // <snippet_GetByID>
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Student>> GetStudent(int id)
         {
