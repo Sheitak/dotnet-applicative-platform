@@ -1,24 +1,55 @@
-﻿namespace MobileApp
+﻿using Newtonsoft.Json;
+
+namespace MobileApp
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
-
         public MainPage()
         {
             InitializeComponent();
         }
 
-        private void OnCounterClicked(object sender, EventArgs e)
+        private async void Login(object sender, EventArgs e)
         {
-            count++;
 
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
+            await LoginAsync();
 
-            SemanticScreenReader.Announce(CounterBtn.Text);
+
+            /*
+            using (var client = new HttpClient())
+            {
+                HttpResponseMessage response = await client.GetAsync("https://exnet.3il.fr");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    
+
+                }
+
+            }
+            */
+        }
+
+        
+        private async Task<string> LoginAsync()
+        {
+            try
+            {
+                WebAuthenticatorResult authResult = await WebAuthenticator.Default.AuthenticateAsync(
+                    new Uri("https://exnet.3il.fr"),
+                    new Uri("myapp://callback")
+                );
+
+                string accessToken = authResult?.AccessToken;
+                var yu = authResult;
+
+                return accessToken;
+
+            }
+            catch (TaskCanceledException e)
+            {
+                return e.Message;
+            }
         }
     }
 }

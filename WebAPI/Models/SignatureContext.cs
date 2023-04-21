@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebAPI.Models
 {
-    public class SignatureContext: DbContext
+    public class SignatureContext: IdentityUserContext<IdentityUser>
     {
         public SignatureContext(DbContextOptions<SignatureContext> options): base(options) {}
         public DbSet<Student> Students { get; set; } = null!;
@@ -12,6 +14,7 @@ namespace WebAPI.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Student>().ToTable("Student");
             modelBuilder.Entity<Signature>().ToTable("Signature");
             modelBuilder.Entity<Group>().ToTable("Group");
