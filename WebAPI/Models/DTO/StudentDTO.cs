@@ -16,8 +16,12 @@ namespace WebAPI.Models.DTO
 
         public Group? Group { get; set; }
 
+        //public string GroupName { get; set; }
+
         public int? PromotionID { get; set; }
 
         public Promotion? Promotion { get; set; }
+
+        //public string PromotionName { get; set; }
     }
 }

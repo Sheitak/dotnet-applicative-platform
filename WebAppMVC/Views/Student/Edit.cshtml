@@ -1,0 +1,24 @@
+﻿@model Student
+
+@{
+    ViewData["Title"] = "Détails de ";
+
+}
+
+<h2>@ViewData["Title"] @Model.Firstname @Model.Lastname</h2>
+
+<p>Liste des émargements de l'élève @Model.Firstname @Model.Lastname</p>
+<p>Promotion : @Model.Promotion.Name</p>
+<p>Groupe : @Model.Group.Name</p>
+
+<hr />
+
+<table id="studentSignatures" class="table table-sm table-bordered table-striped" style="width:100%">
+    <thead>
+        <tr>
+            <th>signatureID</th>
+            <th>Date de création</th>
+            <th>Présence</th>
+        </tr>
+    </thead>
+</table>

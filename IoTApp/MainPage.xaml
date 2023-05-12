@@ -14,14 +14,14 @@
             <RowDefinition Height="1*" />
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
-        <Button Content="Emarger" 
+        <Button Content="Scanner mon QrCode" 
                 Grid.Row="0" 
                 Height="109" 
                 Margin="0,100,0,0" 
                 VerticalAlignment="Top"
                 Width="796" 
                 HorizontalAlignment="Center" 
-                Click="Generate_Click"/>
+                Click="GenerateScanForMobile"/>
         <Image x:Name="QrCodeSign" 
                Grid.Row="1"
                HorizontalAlignment="Center"

@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Models;
+using WebAppMVC.Models;
 
 namespace WebAPI.Controllers
 {
@@ -21,6 +23,7 @@ namespace WebAPI.Controllers
         }
 
         // GET: api/Signatures
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Signature>>> GetSignatures()
         {
@@ -31,7 +34,52 @@ namespace WebAPI.Controllers
             return await _context.Signatures.ToListAsync();
         }
 
+        /// <summary>
+        /// Get all Signatures for DataTable.
+        /// </summary>
+        /// <returns></returns>
+        /// <response code="201">Returns all signatures correctly with complete DataTable</response>
+        /// <response code="400">If the students list is null</response>
+        [HttpGet("/api/datatable/Signatures")]
+        public async Task<ActionResult<DataTableResponse>> GetDataTableSignatures()
+        {
+            if (_context.Signatures == null)
+            {
+                return NotFound();
+            }
+
+            var signatures = await _context.Signatures
+                .Select(s => new
+                {
+                    s.SignatureID,
+                    s.CreatedAt,
+                    s.IsPresent,
+                    Student = new {
+                        s.Student.Firstname, 
+                        s.Student.Lastname,
+                        Group = new 
+                        {
+                            s.Student.Group.GroupID,
+                            s.Student.Group.Name
+                        },
+                        Promotion = new
+                        {
+                            s.Student.Promotion.PromotionID,
+                            s.Student.Promotion.Name
+                        }
+                    }
+                }).ToListAsync();
+
+            return new DataTableResponse
+            {
+                RecordsTotal = signatures.Count(),
+                RecordsFiltered = 10,
+                Data = signatures.ToArray()
+            };
+        }
+
         // GET: api/Signatures/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Signature>> GetSignature(int id)
         {
@@ -51,6 +99,7 @@ namespace WebAPI.Controllers
 
         // PUT: api/Signatures/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSignature(int id, Signature signature)
         {
@@ -96,6 +145,7 @@ namespace WebAPI.Controllers
         }
 
         // DELETE: api/Signatures/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSignature(int id)
         {

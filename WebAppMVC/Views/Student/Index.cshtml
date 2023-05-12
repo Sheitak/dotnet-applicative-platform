@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Elèves";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<table id="students" class="table table-sm table-bordered table-striped" style="width:100%">
+    <thead>
+        <tr>
+            <th>studentID</th>
+            <th>Prénom</th>
+            <th>Nom</th>
+            <th>Promotion</th>
+            <th>Groupe</th>
+        </tr>
+    </thead>
+</table>
+
+<script type="text/javascript">
+    var editStudentUrl = '@Url.Action("Edit", "Student", new { id = "__id__" })';
+</script>

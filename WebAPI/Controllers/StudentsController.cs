@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Models;
 using WebAPI.Models.DTO;
+using WebAppMVC.Models;
 
 namespace WebAPI.Controllers
 {
@@ -30,6 +31,7 @@ namespace WebAPI.Controllers
         /// <returns></returns>
         /// <response code="201">Returns all students correctly</response>
         /// <response code="400">If the students list is null</response>
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<StudentDTO>>> GetStudents()
         {
@@ -41,6 +43,81 @@ namespace WebAPI.Controllers
             return await _context.Students.Select(x => StudentToDTO(x)).ToListAsync();
         }
 
+        /// <summary>
+        /// Get all Students for DataTable.
+        /// </summary>
+        /// <returns></returns>
+        /// <response code="201">Returns all students correctly with complete DataTable</response>
+        /// <response code="400">If the students list is null</response>
+        [HttpGet("/api/datatable/Students")]
+        public async Task<ActionResult<DataTableResponse>> GetDataTableStudents()
+        {
+            if (_context.Students == null)
+            {
+                return NotFound();
+            }
+
+            var students = await _context.Students
+                .Select(s => new
+                {
+                    s.StudentID,
+                    s.Firstname,
+                    s.Lastname,
+                    Group = new
+                    {
+                        s.GroupID,
+                        s.Group.Name
+                    },
+                    Promotion = new
+                    {
+                        s.PromotionID,
+                        s.Promotion.Name
+                    }
+                }).ToListAsync();
+
+            return new DataTableResponse
+            {
+                RecordsTotal = students.Count(),
+                RecordsFiltered = 10,
+                Data = students.ToArray()
+            };
+        }
+
+        /// <summary>
+        /// Get One Student with Signature DataTable.
+        /// </summary>
+        /// <returns></returns>
+        /// <response code="201">Returns one student correctly with complete Signature DataTable</response>
+        /// <response code="400">If the student is null</response>
+        [HttpGet("/api/datatable/Student/{id}")]
+        public async Task<ActionResult<DataTableResponse>> GetDataTableStudentSignatures(int id)
+        {
+            if (_context.Students == null)
+            {
+                return NotFound();
+            }
+
+            var student = await _context.Students
+                .Include(s => s.Group)
+                .Include(s => s.Promotion)
+                .Include(s => s.Signatures)
+                .FirstOrDefaultAsync(s => s.StudentID == id)
+            ;
+
+            if (student == null)
+            {
+                return NotFound();
+            }
+            
+            return new DataTableResponse
+            {
+                RecordsTotal = student.Signatures.Count,
+                RecordsFiltered = 10,
+                Data = student.Signatures.Select(sign => SignatureToDTO(sign)).ToArray()
+            };
+            
+        }
+
         // GET: api/Student/5
         /// <summary>
         /// Get a specific Student.
@@ -50,23 +127,42 @@ namespace WebAPI.Controllers
         /// <response code="201">Returns the specific student correctly</response>
         /// <response code="400">If the student is null</response>
         // <snippet_GetByID>
-        [Authorize]
+        //[Authorize]
         [HttpGet("{id}")]
-        public async Task<ActionResult<Student>> GetStudent(int id)
+        public async Task<ActionResult<object>> GetStudent(int id)
         {
             if (_context.Students == null)
             {
                 return NotFound();
             }
-            var student = await _context.Students.FindAsync(id);
 
+            var student = await _context.Students
+                .Include(s => s.Group)
+                .Include(s => s.Promotion)
+                .FirstOrDefaultAsync(s => s.StudentID == id)
+            ;
+            
             if (student == null)
             {
                 return NotFound();
             }
 
-            return student;
-            //return StudentToDTO(student);
+            return new
+            {
+                student.StudentID,
+                student.Firstname,
+                student.Lastname,
+                Group = new
+                {
+                    student.Group.GroupID,
+                    student.Group.Name
+                },
+                Promotion = new
+                {
+                    student.Promotion.PromotionID,
+                    student.Promotion.Name
+                }
+            };
         }
         // </snippet_GetByID>
 
@@ -94,6 +190,7 @@ namespace WebAPI.Controllers
         /// <response code="201">Returns the updated student correctly</response>
         /// <response code="400">If the student is null</response>
         // <snippet_Update>
+        [Authorize]
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -152,6 +249,7 @@ namespace WebAPI.Controllers
         /// <response code="201">Returns the newly created student</response>
         /// <response code="400">If the student is null</response>
         // <snippet_Create>
+        [Authorize]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -189,6 +287,7 @@ namespace WebAPI.Controllers
         /// <returns></returns>
         /// <response code="201">Student correctly deleted</response>
         /// <response code="400">If the student is null</response>
+        [Authorize]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -222,8 +321,17 @@ namespace WebAPI.Controllers
             Lastname = student.Lastname,
             GroupID = student.GroupID,
             Group = student.Group,
+            //GroupName = student.Group.Name,
             PromotionID = student.PromotionID,
             Promotion = student.Promotion
+            //PromotionName = student.Promotion.Name
+        };
+
+        private static SignatureDTO SignatureToDTO(Signature signature) => new()
+        {
+            SignatureID = signature.SignatureID,
+            CreatedAt = signature.CreatedAt,
+            IsPresent = signature.IsPresent
         };
     }
 }

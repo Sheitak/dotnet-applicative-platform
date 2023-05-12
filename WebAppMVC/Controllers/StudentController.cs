@@ -5,12 +5,12 @@ using WebAppMVC.Repositories;
 
 namespace WebAppMVC.Controllers
 {
-    public class HomeController : Controller
+    public class StudentController : Controller
     {
         private readonly ILogger<HomeController> _logger;
         private readonly StudentRepository _studentRepository;
 
-        public HomeController(ILogger<HomeController> logger, StudentRepository studentRepository)
+        public StudentController(ILogger<HomeController> logger, StudentRepository studentRepository)
         {
             _logger = logger;
             _studentRepository = studentRepository;
@@ -21,14 +21,16 @@ namespace WebAppMVC.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public async Task<IActionResult> Edit(int id)
         {
-            return View();
-        }
+            var student = await _studentRepository.GetStudent(id);
 
-        public IActionResult Signatures()
-        {
-            return View();
+            if (student != null)
+            {
+                ViewData["Student"] = student;
+            }
+
+            return View(student);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

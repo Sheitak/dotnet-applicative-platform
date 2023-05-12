@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Models;
 using WebAPI.Services;
@@ -19,6 +20,7 @@ namespace WebAPI.Controllers
         }
 
         // POST: api/Users
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
@@ -46,6 +48,7 @@ namespace WebAPI.Controllers
         }
 
         // GET: api/Users/username
+        [Authorize]
         [HttpGet("{username}")]
         public async Task<ActionResult<User>> GetUser(string username)
         {
@@ -64,6 +67,7 @@ namespace WebAPI.Controllers
         }
 
         // POST: api/Users/BearerToken
+        //[Authorize]
         [HttpPost("BearerToken")]
         public async Task<ActionResult<AuthenticationResponse>> CreateBearerToken(AuthenticationRequest request)
         {

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Models;
 
@@ -16,6 +17,7 @@ namespace WebAPI.Controllers
         }
 
         // GET: api/Promotions
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Promotion>>> GetPromotions()
         {
@@ -27,6 +29,7 @@ namespace WebAPI.Controllers
         }
 
         // GET: api/Promotions/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Promotion>> GetPromotion(int id)
         {
@@ -46,6 +49,7 @@ namespace WebAPI.Controllers
 
         // PUT: api/Promotions/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPromotion(int id, Promotion promotion)
         {
@@ -77,6 +81,7 @@ namespace WebAPI.Controllers
 
         // POST: api/Promotions
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<Promotion>> PostPromotion(Promotion promotion)
         {
@@ -91,6 +96,7 @@ namespace WebAPI.Controllers
         }
 
         // DELETE: api/Promotions/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePromotion(int id)
         {

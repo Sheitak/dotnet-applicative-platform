@@ -9,6 +9,7 @@ namespace WebAPI.Models
         public int SignatureID { get; set; }
 
         [Required]
+        [DataType(DataType.Date)]
         public DateTime CreatedAt { get; set; }
 
         [Required]

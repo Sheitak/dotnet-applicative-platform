@@ -43,7 +43,10 @@ namespace MobileApp
                 string accessToken = authResult?.AccessToken;
                 var yu = authResult;
 
-                return accessToken;
+                WebAuth.Text = yu.ToString();
+
+                //return accessToken;
+                return yu.ToString();
 
             }
             catch (TaskCanceledException e)
