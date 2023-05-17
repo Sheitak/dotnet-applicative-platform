@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WebAPI.Data;
 using WebAPI.Models;
 using WebAPI.Models.DTO;
 using WebAppMVC.Models;
@@ -31,16 +32,38 @@ namespace WebAPI.Controllers
         /// <returns></returns>
         /// <response code="201">Returns all students correctly</response>
         /// <response code="400">If the students list is null</response>
-        [Authorize]
+        //[Authorize]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<StudentDTO>>> GetStudents()
+        //public async Task<ActionResult<IEnumerable<StudentDTO>>> GetStudents()
+        public async Task<ActionResult<IEnumerable<object>>> GetStudents()
         {
             if (_context.Students == null)
             {
                 return NotFound();
             }
+
+            // TODO: Pense à utiliser le DTO pour les étudiants
+
             //return await _context.Students.ToListAsync();
-            return await _context.Students.Select(x => StudentToDTO(x)).ToListAsync();
+            //return await _context.Students.Select(x => StudentToDTO(x)).ToListAsync();
+
+            return await _context.Students
+                .Select(s => new
+                {
+                    s.StudentID,
+                    s.Firstname,
+                    s.Lastname,
+                    Group = new
+                    {
+                        s.GroupID,
+                        s.Group.Name
+                    },
+                    Promotion = new
+                    {
+                        s.PromotionID,
+                        s.Promotion.Name
+                    }
+                }).ToListAsync();
         }
 
         /// <summary>
@@ -166,7 +189,7 @@ namespace WebAPI.Controllers
         }
         // </snippet_GetByID>
 
-        // PUT: api/Student/5
+        // PUT: api/Students/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         /// <summary>
         /// Update a specific Student.
@@ -185,16 +208,20 @@ namespace WebAPI.Controllers
         ///             "id": 1,
         ///             "name": "Group"
         ///         }
+        ///         "promotion": {
+        ///             "id": 1,
+        ///             "name": "Promotion"
+        ///         }
         ///     }
         /// </remarks>
         /// <response code="201">Returns the updated student correctly</response>
         /// <response code="400">If the student is null</response>
         // <snippet_Update>
-        [Authorize]
+        //[Authorize]
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> PutStudent(int id, StudentDTO studentDTO)
+        public async Task<ActionResult<StudentDTO>> PutStudent(int id, StudentDTO studentDTO)
         {
             if (id != studentDTO.StudentID)
             {
@@ -211,8 +238,28 @@ namespace WebAPI.Controllers
 
             student.Firstname = studentDTO.Firstname;
             student.Lastname = studentDTO.Lastname;
-            student.Group = studentDTO.Group;
-            student.Promotion = studentDTO.Promotion;
+
+            // UPDATE GROUP
+            var newStudentGroup = await _context.Groups.FindAsync(studentDTO.Group.GroupID);
+
+            if (newStudentGroup == null)
+            {
+                return BadRequest("Invalid Group ID");
+            }
+
+            student.GroupID = studentDTO.Group.GroupID;
+            student.Group = newStudentGroup;
+
+            // UPDATE PROMOTION
+            var newStudentPromotion = await _context.Promotions.FindAsync(studentDTO.PromotionID);
+
+            if (newStudentPromotion == null)
+            {
+                return BadRequest("Invalid Promotion ID");
+            }
+
+            student.PromotionID = studentDTO.Promotion.PromotionID;
+            student.Promotion = newStudentPromotion;
 
             try
             {
@@ -223,12 +270,12 @@ namespace WebAPI.Controllers
                 return NotFound();
             }
 
-            return NoContent();
+            return StudentToDTO(student);
         }
         // </snippet_Update>
 
 
-        // POST: api/Student
+        // POST: api/Students
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         /// <summary>
         /// Create a Student.
@@ -243,13 +290,17 @@ namespace WebAPI.Controllers
         ///         "group": {
         ///             "id": 1,
         ///             "name": "Group"
+        ///         },
+        ///         "promotion": {
+        ///             "id": 1,
+        ///             "name": "Promotion"
         ///         }
         ///     }
         /// </remarks>
         /// <response code="201">Returns the newly created student</response>
         /// <response code="400">If the student is null</response>
         // <snippet_Create>
-        [Authorize]
+        //[Authorize]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -260,12 +311,30 @@ namespace WebAPI.Controllers
                 return Problem("Entity set 'SignatureContext.Students'  is null.");
             }
 
+            // UPDATE GROUP
+            var studentGroup = await _context.Groups.FindAsync(studentDTO.GroupID);
+
+            if (studentGroup == null)
+            {
+                return BadRequest("Invalid Group ID");
+            }
+
+            // UPDATE PROMOTION
+            var studentPromotion = await _context.Promotions.FindAsync(studentDTO.PromotionID);
+
+            if (studentPromotion == null)
+            {
+                return BadRequest("Invalid Promotion ID");
+            }
+
             var student = new Student
             {
                 Firstname = studentDTO.Firstname,
                 Lastname = studentDTO.Lastname,
-                Group = studentDTO.Group,
-                Promotion = studentDTO.Promotion
+                GroupID = studentDTO.GroupID,
+                Group = studentGroup,
+                PromotionID = studentDTO.PromotionID,
+                Promotion = studentPromotion
             };
 
             _context.Students.Add(student);
@@ -320,11 +389,17 @@ namespace WebAPI.Controllers
             Firstname = student.Firstname,
             Lastname = student.Lastname,
             GroupID = student.GroupID,
-            Group = student.Group,
-            //GroupName = student.Group.Name,
+            Group = new GroupDTO
+            {
+                GroupID = student.Group.GroupID,
+                Name = student.Group.Name
+            },
             PromotionID = student.PromotionID,
-            Promotion = student.Promotion
-            //PromotionName = student.Promotion.Name
+            Promotion = new PromotionDTO
+            {
+                PromotionID = student.Promotion.PromotionID,
+                Name = student.Promotion.Name
+            }
         };
 
         private static SignatureDTO SignatureToDTO(Signature signature) => new()

@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using WebAPI.Models;
 
-namespace WebAPI.Models
+namespace WebAPI.Data
 {
     internal class DbInitializer
     {

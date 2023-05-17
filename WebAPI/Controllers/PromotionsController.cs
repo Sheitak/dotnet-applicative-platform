@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WebAPI.Data;
 using WebAPI.Models;
 
 namespace WebAPI.Controllers
@@ -17,7 +18,7 @@ namespace WebAPI.Controllers
         }
 
         // GET: api/Promotions
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Promotion>>> GetPromotions()
         {
@@ -38,6 +39,25 @@ namespace WebAPI.Controllers
               return NotFound();
           }
             var promotion = await _context.Promotions.FindAsync(id);
+
+            if (promotion == null)
+            {
+                return NotFound();
+            }
+
+            return promotion;
+        }
+
+        // GET: api/Promotions/ByName/{name}
+        [HttpGet("ByName/{name}")]
+        public async Task<ActionResult<Promotion>> GetPromotionByName(string name)
+        {
+            if (_context.Promotions == null)
+            {
+                return NotFound();
+            }
+
+            var promotion = await _context.Promotions.FirstOrDefaultAsync(p => p.Name == name);
 
             if (promotion == null)
             {

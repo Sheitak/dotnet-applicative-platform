@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using WebAPI.Models;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using Microsoft.AspNetCore.Identity;
@@ -8,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
+using WebAPI.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -14,14 +14,10 @@ namespace WebAPI.Models.DTO
 
         public int? GroupID { get; set; }
 
-        public Group? Group { get; set; }
-
-        //public string GroupName { get; set; }
+        public GroupDTO? Group { get; set; }
 
         public int? PromotionID { get; set; }
 
-        public Promotion? Promotion { get; set; }
-
-        //public string PromotionName { get; set; }
+        public PromotionDTO? Promotion { get; set; }
     }
 }

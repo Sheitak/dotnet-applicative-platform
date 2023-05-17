@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WebAPI.Data;
 using WebAPI.Models;
 
 namespace WebAPI.Controllers
@@ -35,10 +36,11 @@ namespace WebAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Group>> GetGroup(int id)
         {
-          if (_context.Groups == null)
-          {
-              return NotFound();
-          }
+            if (_context.Groups == null)
+            {
+                return NotFound();
+            }
+
             var @group = await _context.Groups.FindAsync(id);
 
             if (@group == null)
@@ -47,6 +49,25 @@ namespace WebAPI.Controllers
             }
 
             return @group;
+        }
+
+        // GET: api/Groups/ByName/{name}
+        [HttpGet("ByName/{name}")]
+        public async Task<ActionResult<Group>> GetGroupByName(string name)
+        {
+            if (_context.Groups == null)
+            {
+                return NotFound();
+            }
+
+            var group = await _context.Groups.FirstOrDefaultAsync(g => g.Name == name);
+
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            return group;
         }
 
         // PUT: api/Groups/5

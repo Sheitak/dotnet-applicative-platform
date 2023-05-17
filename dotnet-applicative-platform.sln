@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAppMVC", "WebAppMVC\WebA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTApp", "IoTApp\IoTApp.csproj", "{E14D46A8-EA63-451B-AA23-3F4AA05B6300}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopApp", "DesktopApp\DesktopApp.csproj", "{B2C3F444-74FA-485B-AB6F-19B7C9C40627}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -125,6 +127,26 @@ Global
 		{E14D46A8-EA63-451B-AA23-3F4AA05B6300}.Release|x86.ActiveCfg = Release|x86
 		{E14D46A8-EA63-451B-AA23-3F4AA05B6300}.Release|x86.Build.0 = Release|x86
 		{E14D46A8-EA63-451B-AA23-3F4AA05B6300}.Release|x86.Deploy.0 = Release|x86
+		{B2C3F444-74FA-485B-AB6F-19B7C9C40627}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2C3F444-74FA-485B-AB6F-19B7C9C40627}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2C3F444-74FA-485B-AB6F-19B7C9C40627}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{B2C3F444-74FA-485B-AB6F-19B7C9C40627}.Debug|ARM.Build.0 = Debug|Any CPU
+		{B2C3F444-74FA-485B-AB6F-19B7C9C40627}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{B2C3F444-74FA-485B-AB6F-19B7C9C40627}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{B2C3F444-74FA-485B-AB6F-19B7C9C40627}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B2C3F444-74FA-485B-AB6F-19B7C9C40627}.Debug|x64.Build.0 = Debug|Any CPU
+		{B2C3F444-74FA-485B-AB6F-19B7C9C40627}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B2C3F444-74FA-485B-AB6F-19B7C9C40627}.Debug|x86.Build.0 = Debug|Any CPU
+		{B2C3F444-74FA-485B-AB6F-19B7C9C40627}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2C3F444-74FA-485B-AB6F-19B7C9C40627}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2C3F444-74FA-485B-AB6F-19B7C9C40627}.Release|ARM.ActiveCfg = Release|Any CPU
+		{B2C3F444-74FA-485B-AB6F-19B7C9C40627}.Release|ARM.Build.0 = Release|Any CPU
+		{B2C3F444-74FA-485B-AB6F-19B7C9C40627}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{B2C3F444-74FA-485B-AB6F-19B7C9C40627}.Release|ARM64.Build.0 = Release|Any CPU
+		{B2C3F444-74FA-485B-AB6F-19B7C9C40627}.Release|x64.ActiveCfg = Release|Any CPU
+		{B2C3F444-74FA-485B-AB6F-19B7C9C40627}.Release|x64.Build.0 = Release|Any CPU
+		{B2C3F444-74FA-485B-AB6F-19B7C9C40627}.Release|x86.ActiveCfg = Release|Any CPU
+		{B2C3F444-74FA-485B-AB6F-19B7C9C40627}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
