@@ -19,20 +19,8 @@ namespace DesktopApp
 
         private async void LoadStudents_Click(object sender, EventArgs e)
         {
-            List<Student> studentsList = new List<Student>();
+            var studentList = await GetStudents();
 
-            using (var client = new HttpClient())
-            {
-                HttpResponseMessage response = await client.GetAsync("https://localhost:7058/api/Students");
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseString = await response.Content.ReadAsStringAsync();
-
-                    studentsList = JsonConvert.DeserializeObject<List<Student>>(responseString);
-                }
-
-            }
             ListFlowLayoutPanel.Controls.Clear();
             CentralFlowLayoutPanel.Controls.Clear();
 
@@ -50,7 +38,7 @@ namespace DesktopApp
 
             studentListView.Columns[0].Width = studentListView.Width - 4 - SystemInformation.VerticalScrollBarWidth;
 
-            foreach (Student student in studentsList)
+            foreach (Student student in studentList)
             {
                 ListViewItem item = new ListViewItem(student.Firstname + ' ' + student.Lastname);
                 item.Tag = student.StudentID;
@@ -61,6 +49,40 @@ namespace DesktopApp
             studentListView.Items[0].Selected = true;
 
             ListFlowLayoutPanel.Controls.Add(studentListView);
+        }
+
+        private async void LoadGroups_Click(object sender, EventArgs e)
+        {
+            var groupList = await GetGroups();
+
+            ListFlowLayoutPanel.Controls.Clear();
+            CentralFlowLayoutPanel.Controls.Clear();
+
+            // PANEL GAUCHE
+            ListView groupListView = new ListView();
+            groupListView.Name = "GroupListView";
+            groupListView.Bounds = new Rectangle(new Point(10, 10), new Size(125, 400));
+
+            groupListView.View = View.Details;
+            groupListView.SelectedIndexChanged += groupListView_SelectedIndexChanged;
+
+            groupListView.Columns.Add("Groupes", -2, HorizontalAlignment.Left);
+            groupListView.FullRowSelect = true;
+            groupListView.GridLines = true;
+
+            groupListView.Columns[0].Width = groupListView.Width - 4 - SystemInformation.VerticalScrollBarWidth;
+
+            foreach (Group group in groupList)
+            {
+                ListViewItem item = new ListViewItem(group.Name);
+                item.Tag = group.GroupID;
+                groupListView.Items.Add(item);
+            }
+
+            groupListView.Focus();
+            groupListView.Items[0].Selected = true;
+
+            ListFlowLayoutPanel.Controls.Add(groupListView);
         }
 
         private void StudentField_Changed(object sender, EventArgs e)
@@ -124,6 +146,30 @@ namespace DesktopApp
             {
                 ListViewItem selectedItem = listView.SelectedItems[0];
                 //MessageBox.Show(selectedItem.Tag.ToString() + ' ' + selectedItem.Text);
+                LoadCentralPanel((int)selectedItem.Tag);
+                setDefaultComboBoxValue();
+            }
+        }
+
+        private void groupListView_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ListView listView = (ListView)sender;
+
+            if (listView.SelectedItems.Count > 0)
+            {
+                ListViewItem selectedItem = listView.SelectedItems[0];
+                LoadCentralPanel((int)selectedItem.Tag);
+                setDefaultComboBoxValue();
+            }
+        }
+
+        private void promotionListView_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ListView listView = (ListView)sender;
+
+            if (listView.SelectedItems.Count > 0)
+            {
+                ListViewItem selectedItem = listView.SelectedItems[0];
                 LoadCentralPanel((int)selectedItem.Tag);
                 setDefaultComboBoxValue();
             }
@@ -253,6 +299,24 @@ namespace DesktopApp
             CentralFlowLayoutPanel.FlowDirection = FlowDirection.TopDown;
         }
 
+        private async Task<List<Student>> GetStudents()
+        {
+            List<Student> studentList = new List<Student>();
+
+            using (var client = new HttpClient())
+            {
+                HttpResponseMessage response = await client.GetAsync("https://localhost:7058/api/Students");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseString = await response.Content.ReadAsStringAsync();
+
+                    studentList = JsonConvert.DeserializeObject<List<Student>>(responseString);
+                }
+                return studentList;
+            }
+        }
+
         private async Task<List<Group>> GetGroups()
         {
             List<Group> groupList = new List<Group>();
@@ -327,11 +391,35 @@ namespace DesktopApp
             var createStudentForm = new CreateStudentForm();
             createStudentForm.Show();
         }
+        private void CreateGroup_Click(object sender, EventArgs e)
+        {
+            var createGroupForm = new CreateGroupForm();
+            createGroupForm.Show();
+        }
+
+        private void CreatePromotion_Click(object sender, EventArgs e)
+        {
+            var createPromotionForm = new CreatePromotionForm();
+            createPromotionForm.Show();
+        }
+
 
         private void ImportStudents_Click(object sender, EventArgs e)
         {
             var importStudentsForm = new ImportStudentsForm();
             importStudentsForm.Show();
+        }
+
+        private void ImportGroups_Click(object sender, EventArgs e)
+        {
+            var importGroupsForm = new ImportGroupsForm();
+            importGroupsForm.Show();
+        }
+
+        private void ImportPromotions_Click(object sender, EventArgs e)
+        {
+            var importPromotionsForm = new ImportPromotionsForm();
+            importPromotionsForm.Show();
         }
     }
 }

@@ -72,21 +72,21 @@
             // CreateStudent
             // 
             CreateStudent.Name = "CreateStudent";
-            CreateStudent.Size = new Size(180, 22);
+            CreateStudent.Size = new Size(120, 22);
             CreateStudent.Text = "Créer";
             CreateStudent.Click += CreateStudent_Click;
             // 
             // LoadStudents
             // 
             LoadStudents.Name = "LoadStudents";
-            LoadStudents.Size = new Size(180, 22);
+            LoadStudents.Size = new Size(120, 22);
             LoadStudents.Text = "Charger";
             LoadStudents.Click += LoadStudents_Click;
             // 
             // ImportStudents
             // 
             ImportStudents.Name = "ImportStudents";
-            ImportStudents.Size = new Size(180, 22);
+            ImportStudents.Size = new Size(120, 22);
             ImportStudents.Text = "Importer";
             ImportStudents.Click += ImportStudents_Click;
             // 
@@ -100,20 +100,23 @@
             // CreateGroup
             // 
             CreateGroup.Name = "CreateGroup";
-            CreateGroup.Size = new Size(120, 22);
+            CreateGroup.Size = new Size(180, 22);
             CreateGroup.Text = "Créer";
+            CreateGroup.Click += CreateGroup_Click;
             // 
             // LoadGroups
             // 
             LoadGroups.Name = "LoadGroups";
-            LoadGroups.Size = new Size(120, 22);
+            LoadGroups.Size = new Size(180, 22);
             LoadGroups.Text = "Charger";
+            LoadGroups.Click += LoadGroups_Click;
             // 
             // ImportGroups
             // 
             ImportGroups.Name = "ImportGroups";
-            ImportGroups.Size = new Size(120, 22);
+            ImportGroups.Size = new Size(180, 22);
             ImportGroups.Text = "Importer";
+            ImportGroups.Click += ImportGroups_Click;
             // 
             // PromotionsTSMI
             // 
@@ -127,6 +130,7 @@
             CreatePromotion.Name = "CreatePromotion";
             CreatePromotion.Size = new Size(120, 22);
             CreatePromotion.Text = "Créer";
+            CreatePromotion.Click += CreatePromotion_Click;
             // 
             // LoadPromotions
             // 
@@ -139,6 +143,7 @@
             ImportPromotions.Name = "ImportPromotions";
             ImportPromotions.Size = new Size(120, 22);
             ImportPromotions.Text = "Importer";
+            ImportPromotions.Click += ImportPromotions_Click;
             // 
             // ListFlowLayoutPanel
             // 
