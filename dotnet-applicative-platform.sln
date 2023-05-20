@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAppMVC", "WebAppMVC\WebA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTApp", "IoTApp\IoTApp.csproj", "{E14D46A8-EA63-451B-AA23-3F4AA05B6300}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopApp", "DesktopApp\DesktopApp.csproj", "{B2C3F444-74FA-485B-AB6F-19B7C9C40627}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopApp", "DesktopApp\DesktopApp.csproj", "{B2C3F444-74FA-485B-AB6F-19B7C9C40627}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TerminalApp", "TerminalApp\TerminalApp.csproj", "{50B3C422-BAA1-49D9-8EAA-117B276EA967}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -147,6 +149,26 @@ Global
 		{B2C3F444-74FA-485B-AB6F-19B7C9C40627}.Release|x64.Build.0 = Release|Any CPU
 		{B2C3F444-74FA-485B-AB6F-19B7C9C40627}.Release|x86.ActiveCfg = Release|Any CPU
 		{B2C3F444-74FA-485B-AB6F-19B7C9C40627}.Release|x86.Build.0 = Release|Any CPU
+		{50B3C422-BAA1-49D9-8EAA-117B276EA967}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50B3C422-BAA1-49D9-8EAA-117B276EA967}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50B3C422-BAA1-49D9-8EAA-117B276EA967}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{50B3C422-BAA1-49D9-8EAA-117B276EA967}.Debug|ARM.Build.0 = Debug|Any CPU
+		{50B3C422-BAA1-49D9-8EAA-117B276EA967}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{50B3C422-BAA1-49D9-8EAA-117B276EA967}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{50B3C422-BAA1-49D9-8EAA-117B276EA967}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{50B3C422-BAA1-49D9-8EAA-117B276EA967}.Debug|x64.Build.0 = Debug|Any CPU
+		{50B3C422-BAA1-49D9-8EAA-117B276EA967}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{50B3C422-BAA1-49D9-8EAA-117B276EA967}.Debug|x86.Build.0 = Debug|Any CPU
+		{50B3C422-BAA1-49D9-8EAA-117B276EA967}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50B3C422-BAA1-49D9-8EAA-117B276EA967}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50B3C422-BAA1-49D9-8EAA-117B276EA967}.Release|ARM.ActiveCfg = Release|Any CPU
+		{50B3C422-BAA1-49D9-8EAA-117B276EA967}.Release|ARM.Build.0 = Release|Any CPU
+		{50B3C422-BAA1-49D9-8EAA-117B276EA967}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{50B3C422-BAA1-49D9-8EAA-117B276EA967}.Release|ARM64.Build.0 = Release|Any CPU
+		{50B3C422-BAA1-49D9-8EAA-117B276EA967}.Release|x64.ActiveCfg = Release|Any CPU
+		{50B3C422-BAA1-49D9-8EAA-117B276EA967}.Release|x64.Build.0 = Release|Any CPU
+		{50B3C422-BAA1-49D9-8EAA-117B276EA967}.Release|x86.ActiveCfg = Release|Any CPU
+		{50B3C422-BAA1-49D9-8EAA-117B276EA967}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
