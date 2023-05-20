@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Data;
 using WebAPI.Models;
+using WebAPI.Models.DTO;
 
 namespace WebAPI.Controllers
 {
@@ -30,7 +31,7 @@ namespace WebAPI.Controllers
         }
 
         // GET: api/Promotions/5
-        [Authorize]
+        //[Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Promotion>> GetPromotion(int id)
         {
@@ -69,50 +70,89 @@ namespace WebAPI.Controllers
 
         // PUT: api/Promotions/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [Authorize]
+        /// <summary>
+        /// Update a specific Promotion.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     PUT api/Promotions/1
+        ///     {
+        ///         "id": 1,
+        ///         "name": "Promotion"
+        ///     }
+        /// </remarks>
+        /// <response code="201">Returns the updated promotion correctly</response>
+        /// <response code="400">If the promotion is null</response>
+        // <snippet_Update>
+        //[Authorize]
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPromotion(int id, Promotion promotion)
+        public async Task<ActionResult<PromotionDTO>> PutPromotion(int id, PromotionDTO promotionDTO)
         {
-            if (id != promotion.PromotionID)
+            if (id != promotionDTO.PromotionID)
             {
                 return BadRequest();
             }
 
-            _context.Entry(promotion).State = EntityState.Modified;
+            //_context.Entry(promotion).State = EntityState.Modified;
 
-            try
+            var promotion = await _context.Promotions.FindAsync(id);
+            if (promotion == null)
+            {
+                return NotFound();
+            }
+
+            promotion.Name = promotionDTO.Name;
+
+           try
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException) when (!PromotionExists(id))
             {
-                if (!PromotionExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
-            return NoContent();
+            return PromotionToDTO(promotion);
         }
 
         // POST: api/Promotions
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [Authorize]
+        /// <summary>
+        /// Create a Promotion.
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     POST api/Promotions
+        ///     {
+        ///         "name": "Promotion"
+        ///     }
+        /// </remarks>
+        /// <response code="201">Returns the newly created promotion</response>
+        /// <response code="400">If the promotion is null</response>
+        // <snippet_Create>
+        //[Authorize]
         [HttpPost]
-        public async Task<ActionResult<Promotion>> PostPromotion(Promotion promotion)
+        public async Task<ActionResult<PromotionDTO>> PostPromotion(PromotionDTO promotionDTO)
         {
           if (_context.Promotions == null)
           {
               return Problem("Entity set 'SignatureContext.Promotions'  is null.");
           }
-            _context.Promotions.Add(promotion);
-            await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPromotion", new { id = promotion.PromotionID }, promotion);
+          var promotion = new Promotion { Name = promotionDTO.Name };
+
+          _context.Promotions.Add(promotion);
+          await _context.SaveChangesAsync();
+
+            return CreatedAtAction(
+                nameof(GetPromotion), 
+                new { id = promotion.PromotionID }, 
+                PromotionToDTO(promotion)
+            );
         }
 
         // DELETE: api/Promotions/5
@@ -140,5 +180,11 @@ namespace WebAPI.Controllers
         {
             return (_context.Promotions?.Any(e => e.PromotionID == id)).GetValueOrDefault();
         }
+
+        private static PromotionDTO PromotionToDTO(Promotion promotion) => new()
+        {
+            PromotionID = promotion.PromotionID,
+            Name = promotion.Name
+        };
     }
 }

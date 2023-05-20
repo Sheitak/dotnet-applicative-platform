@@ -10,6 +10,8 @@ namespace DesktopApp
     {
         static readonly string urlBase = "https://localhost:7058/api";
         Student student = new Student();
+        Group group = new Group();
+        Promotion promotion = new Promotion();
 
         public FormInterface()
         {
@@ -19,10 +21,10 @@ namespace DesktopApp
 
         private async void LoadStudents_Click(object sender, EventArgs e)
         {
-            var studentList = await GetStudents();
-
-            ListFlowLayoutPanel.Controls.Clear();
             CentralFlowLayoutPanel.Controls.Clear();
+            ListFlowLayoutPanel.Controls.Clear();
+
+            var studentList = await GetStudents();
 
             // PANEL GAUCHE
             ListView studentListView = new ListView();
@@ -30,7 +32,7 @@ namespace DesktopApp
             studentListView.Bounds = new Rectangle(new Point(10, 10), new Size(125, 400));
 
             studentListView.View = View.Details;
-            studentListView.SelectedIndexChanged += studentListView_SelectedIndexChanged;
+            studentListView.SelectedIndexChanged += ListView_SelectedIndexChanged;
 
             studentListView.Columns.Add("Elèves", -2, HorizontalAlignment.Left);
             studentListView.FullRowSelect = true;
@@ -53,10 +55,10 @@ namespace DesktopApp
 
         private async void LoadGroups_Click(object sender, EventArgs e)
         {
-            var groupList = await GetGroups();
-
-            ListFlowLayoutPanel.Controls.Clear();
             CentralFlowLayoutPanel.Controls.Clear();
+            ListFlowLayoutPanel.Controls.Clear();
+
+            var groupList = await GetGroups();
 
             // PANEL GAUCHE
             ListView groupListView = new ListView();
@@ -64,7 +66,7 @@ namespace DesktopApp
             groupListView.Bounds = new Rectangle(new Point(10, 10), new Size(125, 400));
 
             groupListView.View = View.Details;
-            groupListView.SelectedIndexChanged += groupListView_SelectedIndexChanged;
+            groupListView.SelectedIndexChanged += ListView_SelectedIndexChanged;
 
             groupListView.Columns.Add("Groupes", -2, HorizontalAlignment.Left);
             groupListView.FullRowSelect = true;
@@ -85,10 +87,43 @@ namespace DesktopApp
             ListFlowLayoutPanel.Controls.Add(groupListView);
         }
 
-        private void StudentField_Changed(object sender, EventArgs e)
+        private async void LoadPromotions_Click(object sender, EventArgs e)
+        {
+            CentralFlowLayoutPanel.Controls.Clear();
+            ListFlowLayoutPanel.Controls.Clear();
+
+            var promotionList = await GetPromotions();
+
+            // PANEL GAUCHE
+            ListView promotionListView = new ListView();
+            promotionListView.Name = "PromotionListView";
+            promotionListView.Bounds = new Rectangle(new Point(10, 10), new Size(125, 400));
+
+            promotionListView.View = View.Details;
+            promotionListView.SelectedIndexChanged += ListView_SelectedIndexChanged;
+
+            promotionListView.Columns.Add("Promotions", -2, HorizontalAlignment.Left);
+            promotionListView.FullRowSelect = true;
+            promotionListView.GridLines = true;
+
+            promotionListView.Columns[0].Width = promotionListView.Width - 4 - SystemInformation.VerticalScrollBarWidth;
+
+            foreach (Promotion promotion in promotionList)
+            {
+                ListViewItem item = new ListViewItem(promotion.Name);
+                item.Tag = promotion.PromotionID;
+                promotionListView.Items.Add(item);
+            }
+
+            promotionListView.Focus();
+            promotionListView.Items[0].Selected = true;
+
+            ListFlowLayoutPanel.Controls.Add(promotionListView);
+        }
+
+        private void TextField_Changed(object sender, EventArgs e)
         {
             TextBox textBox = sender as TextBox;
-            //MessageBox.Show(textBox.Name + " text changed. Value " + textBox.Text);
             switch (textBox.Name)
             {
                 case "FirstnameField":
@@ -97,10 +132,16 @@ namespace DesktopApp
                 case "LastnameField":
                     student.Lastname = textBox.Text;
                     break;
+                case "GroupNameField":
+                    group.Name = textBox.Text;
+                    break;
+                case "PromotionNameField":
+                    promotion.Name = textBox.Text;
+                    break;
             }
         }
 
-        private void StudentFieldCB_Changed(object sender, EventArgs e)
+        private void ComboBoxField_Changed(object sender, EventArgs e)
         {
             ComboBox comboBox = sender as ComboBox;
 
@@ -125,12 +166,26 @@ namespace DesktopApp
             }
         }
 
-        async void submitEditButton_Click(object sender, EventArgs e)
+        private async void submitBtn_Click(object sender, EventArgs e)
         {
+            Button btnSubmit = sender as Button;
             try
             {
-                await UpdateStudent(student);
-                MessageBox.Show("L'étudiant " + student.Firstname + " " + student.Lastname + " a été modifié avec succès !");
+                switch (btnSubmit.Name)
+                {
+                    case "submitEditStudentButton":
+                        await UpdateStudent(student);
+                        MessageBox.Show("L'étudiant " + student.Firstname + " " + student.Lastname + " a été modifié avec succès !");
+                        break;
+                    case "submitEditGroupButton":
+                        await UpdateGroup(group);
+                        MessageBox.Show("Le groupe " + group.Name + " a été modifié avec succès !");
+                        break;
+                    case "submitEditPromotionButton":
+                        await UpdatePromotion(promotion);
+                        MessageBox.Show("La promotion " + promotion.Name + " a été modifiée avec succès !");
+                        break;
+                }
             }
             catch (Exception ex)
             {
@@ -138,53 +193,32 @@ namespace DesktopApp
             }
         }
 
-        private void studentListView_SelectedIndexChanged(object sender, EventArgs e)
+        private void ListView_SelectedIndexChanged(object sender, EventArgs e)
         {
             ListView listView = (ListView)sender;
 
             if (listView.SelectedItems.Count > 0)
             {
                 ListViewItem selectedItem = listView.SelectedItems[0];
-                //MessageBox.Show(selectedItem.Tag.ToString() + ' ' + selectedItem.Text);
-                LoadCentralPanel((int)selectedItem.Tag);
-                setDefaultComboBoxValue();
+                switch (listView.Name)
+                {
+                    case "StudentListView":
+                        LoadCentralStudentPanel((int)selectedItem.Tag);
+                        break;
+                    case "GroupListView":
+                        LoadCentralGroupPanel((int)selectedItem.Tag);
+                        break;
+                    case "PromotionListView":
+                        LoadCentralPromotionPanel((int)selectedItem.Tag);
+                        break;
+                }
             }
         }
 
-        private void groupListView_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ListView listView = (ListView)sender;
-
-            if (listView.SelectedItems.Count > 0)
-            {
-                ListViewItem selectedItem = listView.SelectedItems[0];
-                LoadCentralPanel((int)selectedItem.Tag);
-                setDefaultComboBoxValue();
-            }
-        }
-
-        private void promotionListView_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ListView listView = (ListView)sender;
-
-            if (listView.SelectedItems.Count > 0)
-            {
-                ListViewItem selectedItem = listView.SelectedItems[0];
-                LoadCentralPanel((int)selectedItem.Tag);
-                setDefaultComboBoxValue();
-            }
-        }
-
-        private void setDefaultComboBoxValue()
-        {
-
-        }
-
-        private async void LoadCentralPanel(int studentId)
+        private async void LoadCentralStudentPanel(int studentId)
         {
             CentralFlowLayoutPanel.Controls.Clear();
 
-            //var student = 
             await GetStudentById(studentId);
 
             // ID
@@ -207,7 +241,7 @@ namespace DesktopApp
             studentFirstnameLabel.Text = "Prénom : ";
             studentFirstnameField.Name = "FirstnameField";
             studentFirstnameField.Text = student.Firstname.ToString();
-            studentFirstnameField.TextChanged += new EventHandler(StudentField_Changed);
+            studentFirstnameField.TextChanged += new EventHandler(TextField_Changed);
 
             CentralFlowLayoutPanel.FlowDirection = FlowDirection.LeftToRight;
 
@@ -221,7 +255,7 @@ namespace DesktopApp
             studentLastnameLabel.Text = "Nom : ";
             studentLastnameField.Name = "LastnameField";
             studentLastnameField.Text = student.Lastname.ToString();
-            studentLastnameField.TextChanged += new EventHandler(StudentField_Changed);
+            studentLastnameField.TextChanged += new EventHandler(TextField_Changed);
 
             CentralFlowLayoutPanel.FlowDirection = FlowDirection.LeftToRight;
 
@@ -254,7 +288,7 @@ namespace DesktopApp
                 groupList.SelectedValue = null; // ComboBox vide
             }
 
-            groupList.SelectedValueChanged += new EventHandler(StudentFieldCB_Changed);
+            groupList.SelectedValueChanged += new EventHandler(ComboBoxField_Changed);
 
             CentralFlowLayoutPanel.Controls.Add(groupListLabel);
             CentralFlowLayoutPanel.Controls.Add(groupList);
@@ -284,17 +318,106 @@ namespace DesktopApp
                 promotionList.SelectedValue = null; // ComboBox vide
             }
 
-            promotionList.SelectedValueChanged += new EventHandler(StudentFieldCB_Changed);
+            promotionList.SelectedValueChanged += new EventHandler(ComboBoxField_Changed);
 
             CentralFlowLayoutPanel.Controls.Add(promotionListLabel);
             CentralFlowLayoutPanel.Controls.Add(promotionList);
 
             // SUBMIT
-            Button studentEditButton = new Button();
-            studentEditButton.Text = "Modifier";
-            studentEditButton.Click += new EventHandler(submitEditButton_Click);
+            Button submitBtn = new Button();
+            submitBtn.Name = "submitEditStudentButton";
+            submitBtn.Text = "Modifier";
+            submitBtn.Click += new EventHandler(submitBtn_Click);
 
-            CentralFlowLayoutPanel.Controls.Add(studentEditButton);
+            CentralFlowLayoutPanel.Controls.Add(submitBtn);
+
+            CentralFlowLayoutPanel.FlowDirection = FlowDirection.TopDown;
+        }
+
+        private async void LoadCentralGroupPanel(int groupId)
+        {
+            CentralFlowLayoutPanel.Controls.Clear();
+
+            await GetGroupById(groupId);
+
+            // ID
+            Label groupIDLabel = new Label();
+            TextBox groupIDField = new TextBox();
+
+            groupIDLabel.Text = "ID : ";
+            groupIDLabel.Name = "groupIDField";
+            groupIDField.Text = group.GroupID.ToString();
+
+            CentralFlowLayoutPanel.FlowDirection = FlowDirection.LeftToRight;
+
+            CentralFlowLayoutPanel.Controls.Add(groupIDLabel);
+            CentralFlowLayoutPanel.Controls.Add(groupIDField);
+
+            // NAME
+            Label groupNameLabel = new Label();
+            TextBox groupNameField = new TextBox();
+
+            groupNameLabel.Text = "Nom : ";
+            groupNameField.Name = "GroupNameField";
+            groupNameField.Text = group.Name.ToString();
+            groupNameField.TextChanged += new EventHandler(TextField_Changed);
+
+            CentralFlowLayoutPanel.FlowDirection = FlowDirection.LeftToRight;
+
+            CentralFlowLayoutPanel.Controls.Add(groupNameLabel);
+            CentralFlowLayoutPanel.Controls.Add(groupNameField);
+
+            // SUBMIT
+            Button submitBtn = new Button();
+            submitBtn.Name = "submitEditGroupButton";
+            submitBtn.Text = "Modifier";
+            submitBtn.Click += new EventHandler(submitBtn_Click);
+
+            CentralFlowLayoutPanel.Controls.Add(submitBtn);
+
+            CentralFlowLayoutPanel.FlowDirection = FlowDirection.TopDown;
+        }
+
+        private async void LoadCentralPromotionPanel(int promotionId)
+        {
+            CentralFlowLayoutPanel.Controls.Clear();
+
+            await GetPromotionById(promotionId);
+
+            // ID
+            Label promotionIDLabel = new Label();
+            TextBox promotionIDField = new TextBox();
+
+            promotionIDLabel.Text = "ID : ";
+            promotionIDLabel.Name = "promotionIDField";
+            promotionIDField.Text = promotion.PromotionID.ToString();
+
+            CentralFlowLayoutPanel.FlowDirection = FlowDirection.LeftToRight;
+
+            CentralFlowLayoutPanel.Controls.Add(promotionIDLabel);
+            CentralFlowLayoutPanel.Controls.Add(promotionIDField);
+
+            // NAME
+            Label promotionNameLabel = new Label();
+            TextBox promotionNameField = new TextBox();
+
+            promotionNameLabel.Text = "Nom : ";
+            promotionNameField.Name = "PromotionNameField";
+            promotionNameField.Text = promotion.Name.ToString();
+            promotionNameField.TextChanged += new EventHandler(TextField_Changed);
+
+            CentralFlowLayoutPanel.FlowDirection = FlowDirection.LeftToRight;
+
+            CentralFlowLayoutPanel.Controls.Add(promotionNameLabel);
+            CentralFlowLayoutPanel.Controls.Add(promotionNameField);
+
+            // SUBMIT
+            Button submitBtn = new Button();
+            submitBtn.Name = "submitEditPromotionButton";
+            submitBtn.Text = "Modifier";
+            submitBtn.Click += new EventHandler(submitBtn_Click);
+
+            CentralFlowLayoutPanel.Controls.Add(submitBtn);
 
             CentralFlowLayoutPanel.FlowDirection = FlowDirection.TopDown;
         }
@@ -372,6 +495,40 @@ namespace DesktopApp
             }
         }
 
+        private async Task<Group> GetGroupById(int id)
+        {
+            using (var client = new HttpClient())
+            {
+                HttpResponseMessage response = await client.GetAsync("https://localhost:7058/api/Groups/" + id);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseString = await response.Content.ReadAsStringAsync();
+
+                    group = JsonConvert.DeserializeObject<Group>(responseString);
+                }
+
+                return group;
+            }
+        }
+
+        private async Task<Promotion> GetPromotionById(int id)
+        {
+            using (var client = new HttpClient())
+            {
+                HttpResponseMessage response = await client.GetAsync("https://localhost:7058/api/Promotions/" + id);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseString = await response.Content.ReadAsStringAsync();
+
+                    promotion = JsonConvert.DeserializeObject<Promotion>(responseString);
+                }
+
+                return promotion;
+            }
+        }
+
         private async Task<Student> UpdateStudent(Student student)
         {
             using (var client = new HttpClient())
@@ -383,6 +540,34 @@ namespace DesktopApp
                 response.EnsureSuccessStatusCode();
 
                 return await response.Content.ReadAsAsync<Student>();
+            }
+        }
+
+        private async Task<Group> UpdateGroup(Group group)
+        {
+            using (var client = new HttpClient())
+            {
+                HttpResponseMessage response = await client.PutAsJsonAsync(
+                    "https://localhost:7058/api/Groups/" + group.GroupID,
+                    group
+                );
+                response.EnsureSuccessStatusCode();
+
+                return await response.Content.ReadAsAsync<Group>();
+            }
+        }
+
+        private async Task<Promotion> UpdatePromotion(Promotion promotion)
+        {
+            using (var client = new HttpClient())
+            {
+                HttpResponseMessage response = await client.PutAsJsonAsync(
+                    "https://localhost:7058/api/Promotions/" + promotion.PromotionID,
+                    promotion
+                );
+                response.EnsureSuccessStatusCode();
+
+                return await response.Content.ReadAsAsync<Promotion>();
             }
         }
 

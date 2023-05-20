@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Data;
 using WebAPI.Models;
+using WebAPI.Models.DTO;
 
 namespace WebAPI.Controllers
 {
@@ -72,48 +73,92 @@ namespace WebAPI.Controllers
 
         // PUT: api/Groups/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Update a specific Group.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     PUT api/Groups/1
+        ///     {
+        ///         "id": 1,
+        ///         "name": "Group"
+        ///     }
+        /// </remarks>
+        /// <response code="201">Returns the updated group correctly</response>
+        /// <response code="400">If the group is null</response>
+        // <snippet_Update>
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutGroup(int id, Group @group)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GroupDTO>> PutGroup(int id, GroupDTO groupDTO)
         {
-            if (id != @group.GroupID)
+            if (id != groupDTO.GroupID)
             {
                 return BadRequest();
             }
 
-            _context.Entry(@group).State = EntityState.Modified;
+            //_context.Entry(@group).State = EntityState.Modified;
+
+            var group = await _context.Groups.FindAsync(id);
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            group.Name = groupDTO.Name;
 
             try
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException) when (!GroupExists(id))
             {
-                if (!GroupExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
-            return NoContent();
+            return GroupToDTO(group);
         }
 
         // POST: api/Groups
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Create a Group.
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     POST api/Groups
+        ///     {
+        ///         "name": "Group"
+        ///     }
+        /// </remarks>
+        /// <response code="201">Returns the newly created group</response>
+        /// <response code="400">If the group is null</response>
+        // <snippet_Create>
+        //[Authorize]
         [HttpPost]
-        public async Task<ActionResult<Group>> PostGroup(Group @group)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GroupDTO>> PostGroup(GroupDTO groupDTO)
         {
           if (_context.Groups == null)
           {
               return Problem("Entity set 'SignatureContext.Groups'  is null.");
           }
-            _context.Groups.Add(@group);
-            await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetGroup", new { id = @group.GroupID }, @group);
+          var group = new Group { Name = groupDTO.Name };
+
+          _context.Groups.Add(group);
+          await _context.SaveChangesAsync();
+
+          return CreatedAtAction(
+              nameof(GetGroup), 
+              new { id = group.GroupID }, 
+              GroupToDTO(group)
+          );
         }
 
         // DELETE: api/Groups/5
@@ -140,5 +185,11 @@ namespace WebAPI.Controllers
         {
             return (_context.Groups?.Any(e => e.GroupID == id)).GetValueOrDefault();
         }
+
+        private static GroupDTO GroupToDTO(Group group) => new()
+        {
+            GroupID = group.GroupID,
+            Name = group.Name
+        };
     }
 }

@@ -49,6 +49,7 @@
             nameField.Name = "nameField";
             nameField.Size = new Size(170, 23);
             nameField.TabIndex = 4;
+            nameField.TextChanged += nameField_TextChanged;
             // 
             // nameLBL
             // 

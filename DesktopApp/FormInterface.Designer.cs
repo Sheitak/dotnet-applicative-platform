@@ -100,21 +100,21 @@
             // CreateGroup
             // 
             CreateGroup.Name = "CreateGroup";
-            CreateGroup.Size = new Size(180, 22);
+            CreateGroup.Size = new Size(120, 22);
             CreateGroup.Text = "Créer";
             CreateGroup.Click += CreateGroup_Click;
             // 
             // LoadGroups
             // 
             LoadGroups.Name = "LoadGroups";
-            LoadGroups.Size = new Size(180, 22);
+            LoadGroups.Size = new Size(120, 22);
             LoadGroups.Text = "Charger";
             LoadGroups.Click += LoadGroups_Click;
             // 
             // ImportGroups
             // 
             ImportGroups.Name = "ImportGroups";
-            ImportGroups.Size = new Size(180, 22);
+            ImportGroups.Size = new Size(120, 22);
             ImportGroups.Text = "Importer";
             ImportGroups.Click += ImportGroups_Click;
             // 
@@ -128,20 +128,21 @@
             // CreatePromotion
             // 
             CreatePromotion.Name = "CreatePromotion";
-            CreatePromotion.Size = new Size(120, 22);
+            CreatePromotion.Size = new Size(180, 22);
             CreatePromotion.Text = "Créer";
             CreatePromotion.Click += CreatePromotion_Click;
             // 
             // LoadPromotions
             // 
             LoadPromotions.Name = "LoadPromotions";
-            LoadPromotions.Size = new Size(120, 22);
+            LoadPromotions.Size = new Size(180, 22);
             LoadPromotions.Text = "Charger";
+            LoadPromotions.Click += LoadPromotions_Click;
             // 
             // ImportPromotions
             // 
             ImportPromotions.Name = "ImportPromotions";
-            ImportPromotions.Size = new Size(120, 22);
+            ImportPromotions.Size = new Size(180, 22);
             ImportPromotions.Text = "Importer";
             ImportPromotions.Click += ImportPromotions_Click;
             // 
