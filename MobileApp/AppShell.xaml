@@ -13,8 +13,8 @@
             ContentTemplate="{DataTemplate local:MainPage}"
             Icon="icon_notes"/>
         <ShellContent 
-            Title="Emargement"
-            ContentTemplate="{DataTemplate views:Signature}"
+            Title="QrCode"
+            ContentTemplate="{DataTemplate views:GenerateQrCode}"
             Icon="icon_notes"/>
         <ShellContent
             Title="A Propos"

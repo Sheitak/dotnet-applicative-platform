@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MobileAppV2.Views.GenerateQrCode"
+             Title="Générer votre QrCode">
+    <VerticalStackLayout>
+        <Label 
+            x:Name="SignatureLabel"
+            Margin="30"
+            FontAttributes="Bold"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+        <Image
+            x:Name="QrCodeImage"
+            HeightRequest="300"
+            HorizontalOptions="Center"
+            WidthRequest="300"/>
+        <Button
+            x:Name="GenerateQrCodeButton"
+            Text="Generate QR Code"
+            Margin="30"
+            Clicked="GenerateQrCodeButton_Clicked"/>
+        <Label
+            x:Name="MacAddress"
+            FontSize="18"
+            HorizontalOptions="Center" />
+    </VerticalStackLayout>
+</ContentPage>

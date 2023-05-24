@@ -53,9 +53,9 @@
             dateLabel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
             dateLabel.Location = new Point(278, 87);
             dateLabel.Name = "dateLabel";
-            dateLabel.Size = new Size(105, 21);
+            dateLabel.Size = new Size(49, 21);
             dateLabel.TabIndex = 1;
-            dateLabel.Text = "Chargement...";
+            dateLabel.Text = "Echec";
             // 
             // welcomeLabel
             // 

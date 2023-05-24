@@ -141,7 +141,7 @@ namespace WebAPI.Controllers
             
         }
 
-        // GET: api/Student/5
+        // GET: api/Students/GetById/5
         /// <summary>
         /// Get a specific Student.
         /// </summary>
@@ -149,9 +149,9 @@ namespace WebAPI.Controllers
         /// <returns></returns>
         /// <response code="201">Returns the specific student correctly</response>
         /// <response code="400">If the student is null</response>
-        // <snippet_GetByID>
+        // <snippet_GetById>
         //[Authorize]
-        [HttpGet("{id}")]
+        [HttpGet("GetById/{id}")]
         public async Task<ActionResult<object>> GetStudent(int id)
         {
             if (_context.Students == null)
@@ -187,7 +187,59 @@ namespace WebAPI.Controllers
                 }
             };
         }
-        // </snippet_GetByID>
+        // </snippet_GetById>
+
+        // GET: api/Students/GetByIdWithMacAddress/8/82A70095380B
+        /// <summary>
+        /// Get a specific Student device informations.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="macAddress"></param>
+        /// <returns></returns>
+        /// <response code="201">Returns the specific device student informations correctly</response>
+        /// <response code="400">If the student is null</response>
+        // <snippet_GetByIdWithMacAddress>
+        //[Authorize]
+        [HttpGet("GetByIdWithMacAddress/{id}/{macAddress}")]
+        public async Task<ActionResult<object>> GetStudentByIdWithMacAddress(int id, string macAddress)
+        {
+            if (_context.Students == null)
+            {
+                return NotFound();
+            }
+
+            var student = await _context.Students.FirstOrDefaultAsync(s => s.StudentID == id);
+
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            if (student.MacAdress != macAddress)
+            {
+                return Unauthorized();
+            }
+
+            if (student.MacAdress == macAddress && student.IsActive == true)
+            {
+                return new
+                {
+                    student.StudentID,
+                    student.Firstname,
+                    student.Lastname,
+                    student.IsActive,
+                    student.MacAdress
+                };
+            }
+
+            if (student.MacAdress == macAddress && student.IsActive == false)
+            {
+                throw new InvalidDataException("Cet appareil n'est pas encore activé pour votre compte");
+            }
+
+            return NotFound();
+        }
+        // </snippet_GetByIdWithMacAddress>
 
         // PUT: api/Students/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

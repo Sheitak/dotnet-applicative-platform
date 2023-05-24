@@ -12,6 +12,10 @@ namespace WebAPI.Models
         [Required]
         public string Lastname { get; set; }
 
+        public bool? IsActive { get; set; }
+
+        public string? MacAdress { get; set; }
+
         public int? GroupID { get; set; }
 
         public Group? Group { get; set; }

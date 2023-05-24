@@ -23,7 +23,7 @@ namespace MobileApp
                     h.AddHandler(typeof(ZXing.Net.Maui.Controls.CameraView), typeof(CameraViewHandler));
                     h.AddHandler(typeof(ZXing.Net.Maui.Controls.BarcodeGeneratorView), typeof(BarcodeGeneratorViewHandler));
                 });
-                #endregion
+            #endregion
 
 #if DEBUG
             builder.Logging.AddDebug();

@@ -21,7 +21,6 @@ namespace WebAppMVC.Repositories
 
                     studentsList = JsonConvert.DeserializeObject<List<Student>>(responseString);
                 }
-
             }
             return studentsList;
         }
@@ -29,7 +28,7 @@ namespace WebAppMVC.Repositories
         public async Task<Student> GetStudent(int id)
         {
             using var client = new HttpClient();
-            HttpResponseMessage response = await client.GetAsync("https://localhost:7058/api/Students/"+id);
+            HttpResponseMessage response = await client.GetAsync("https://localhost:7058/api/Students/GetById/" + id);
 
             if (response.IsSuccessStatusCode)
             {
@@ -37,7 +36,6 @@ namespace WebAppMVC.Repositories
 
                 return JsonConvert.DeserializeObject<Student>(responseString);
             }
-
             throw new Exception();
         }
     }

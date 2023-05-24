@@ -116,7 +116,9 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseHttpsRedirection();
+// TODO: Commenté pour le problème lié aux vérifications de certificats de MAUI
+// https://stackoverflow.com/questions/71047509/trust-anchor-for-certification-path-not-found-in-a-net-maui-project-trying-t/71196389#71196389
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

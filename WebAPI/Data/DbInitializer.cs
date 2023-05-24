@@ -43,9 +43,9 @@ namespace WebAPI.Data
 
             var students = new Student[]
             {
-                new Student{ Firstname="Carson", Lastname="Alexander", GroupID=1, PromotionID=1 },
-                new Student{ Firstname="Meredith", Lastname="Alonso", GroupID=1, PromotionID=2 },
-                new Student{ Firstname="Arturo", Lastname="Anand", GroupID=2, PromotionID=1 },
+                new Student{ Firstname="Carson", Lastname="Alexander", IsActive=true, MacAdress="82A70095380B", GroupID=1, PromotionID=1 },
+                new Student{ Firstname="Meredith", Lastname="Alonso", IsActive=false, MacAdress="82A70095380B", GroupID=1, PromotionID=2 },
+                new Student{ Firstname="Arturo", Lastname="Anand", IsActive=false, MacAdress="82A70095380B", GroupID=2, PromotionID=1 },
                 new Student{ Firstname="Gytis", Lastname="Barzdukas", GroupID=2, PromotionID=1 },
                 new Student{ Firstname="Yan", Lastname="Li", GroupID=2, PromotionID=3 }
             };
