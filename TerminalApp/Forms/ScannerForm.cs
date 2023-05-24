@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AForge.Video;
+using AForge.Video.DirectShow;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,51 +17,64 @@ namespace TerminalApp.Forms
 {
     public partial class ScannerForm : Form
     {
-        private QRCodeScanner qrCodeScanner;
+        // https://www.youtube.com/watch?v=N2ioyWYt0AM
+        private FilterInfoCollection CaptureDevice;
+        private VideoCaptureDevice FinalFrame;
 
         public ScannerForm()
         {
             InitializeComponent();
-            CenterToScreen();
-            StartQRCodeScanning();
         }
 
-        private void scanBtn_Click(object sender, EventArgs e)
+        private void ScannerForm_Load(object sender, EventArgs e)
         {
-            Hide();
+            CaptureDevice = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+            FinalFrame = new VideoCaptureDevice(CaptureDevice[0].MonikerString);
+
+            FinalFrame.NewFrame += new NewFrameEventHandler(FinalFrame_NewFrame);
+            FinalFrame.Start();
+
+            timerScan.Start();
         }
 
-        public void StartQRCodeScanning()
+        private void FinalFrame_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
-            qrCodeScanner = new QRCodeScanner(scannerPanel, scanPictureBox);
-            qrCodeScanner.QRCodeScanned += QRCodeScanner_QRCodeScanned;
-            qrCodeScanner.StartScanning();
+            scanPictureBox.Image = (Bitmap)eventArgs.Frame.Clone();
         }
 
-        public void StopQRCodeScanning()
+        private void ScannerForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            qrCodeScanner.StopScanning();
-            qrCodeScanner.QRCodeScanned -= QRCodeScanner_QRCodeScanned;
-        }
-
-        private void QRCodeScanner_QRCodeScanned(object sender, string qrCodeText)
-        {
-            MessageBox.Show("QRCode détecté : " + qrCodeText);
-        }
-
-        /*
-        public static string ReadQrCode(byte[] qrCode)
-        {
-            BarcodeReader coreCompatReader = new BarcodeReader();
-
-            using (Stream stream = new MemoryStream(qrCode))
+            if (FinalFrame != null && FinalFrame.IsRunning)
             {
-                using (var coreCompatImage = (Bitmap)Image.FromStream(stream))
-                {
-                    return coreCompatReader.Decode(coreCompatImage).Text;
-                }
+                FinalFrame.SignalToStop();
+                FinalFrame.WaitForStop();
+                FinalFrame = null;
             }
         }
-        */
+
+        private void timerScan_Tick(object sender, EventArgs e)
+        {
+            BarcodeReader barcodeReader = new BarcodeReader();
+            try
+            {
+                Result result = barcodeReader.Decode((Bitmap)scanPictureBox.Image);
+                string decoded = "";
+
+                if (result != null)
+                {
+                    decoded = result.ToString().Trim();
+                }
+                if (decoded != "")
+                {
+                    timerScan.Stop();
+                    MessageBox.Show("QR code détecté : " + decoded, "QR code détecté");
+                    Close();
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
     }
 }

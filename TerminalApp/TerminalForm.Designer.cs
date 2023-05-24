@@ -33,7 +33,6 @@
             welcomeLabel = new Label();
             signaturePanel = new Panel();
             scanBtn = new Button();
-            qrBtn = new Button();
             welcomePanel.SuspendLayout();
             signaturePanel.SuspendLayout();
             SuspendLayout();
@@ -51,7 +50,7 @@
             // 
             dateLabel.AutoSize = true;
             dateLabel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            dateLabel.Location = new Point(278, 87);
+            dateLabel.Location = new Point(298, 86);
             dateLabel.Name = "dateLabel";
             dateLabel.Size = new Size(49, 21);
             dateLabel.TabIndex = 1;
@@ -61,7 +60,7 @@
             // 
             welcomeLabel.AutoSize = true;
             welcomeLabel.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point);
-            welcomeLabel.Location = new Point(26, 20);
+            welcomeLabel.Location = new Point(125, 19);
             welcomeLabel.Name = "welcomeLabel";
             welcomeLabel.Size = new Size(384, 21);
             welcomeLabel.TabIndex = 0;
@@ -70,7 +69,6 @@
             // signaturePanel
             // 
             signaturePanel.Controls.Add(scanBtn);
-            signaturePanel.Controls.Add(qrBtn);
             signaturePanel.Location = new Point(74, 248);
             signaturePanel.Name = "signaturePanel";
             signaturePanel.Size = new Size(650, 141);
@@ -78,23 +76,13 @@
             // 
             // scanBtn
             // 
-            scanBtn.Location = new Point(505, 56);
+            scanBtn.Location = new Point(255, 82);
             scanBtn.Name = "scanBtn";
-            scanBtn.Size = new Size(75, 23);
+            scanBtn.Size = new Size(135, 23);
             scanBtn.TabIndex = 1;
             scanBtn.Text = "Scanner";
             scanBtn.UseVisualStyleBackColor = true;
             scanBtn.Click += scanBtn_Click;
-            // 
-            // qrBtn
-            // 
-            qrBtn.Location = new Point(66, 56);
-            qrBtn.Name = "qrBtn";
-            qrBtn.Size = new Size(75, 23);
-            qrBtn.TabIndex = 0;
-            qrBtn.Text = "QR Code";
-            qrBtn.UseVisualStyleBackColor = true;
-            qrBtn.Click += qrBtn_Click;
             // 
             // TerminalForm
             // 
@@ -117,7 +105,6 @@
         private Label welcomeLabel;
         private Label dateLabel;
         private Panel signaturePanel;
-        private Button qrBtn;
         private Button scanBtn;
     }
 }

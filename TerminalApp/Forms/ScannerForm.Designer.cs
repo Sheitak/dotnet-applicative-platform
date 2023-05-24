@@ -28,69 +28,41 @@
         /// </summary>
         private void InitializeComponent()
         {
-            scannerPanel = new Panel();
+            components = new System.ComponentModel.Container();
             scanPictureBox = new PictureBox();
-            scanBtn = new Button();
-            exampleTextBox = new TextBox();
-            scannerPanel.SuspendLayout();
+            timerScan = new System.Windows.Forms.Timer(components);
             ((System.ComponentModel.ISupportInitialize)scanPictureBox).BeginInit();
             SuspendLayout();
             // 
-            // scannerPanel
-            // 
-            scannerPanel.Controls.Add(exampleTextBox);
-            scannerPanel.Controls.Add(scanBtn);
-            scannerPanel.Controls.Add(scanPictureBox);
-            scannerPanel.Dock = DockStyle.Fill;
-            scannerPanel.Location = new Point(0, 0);
-            scannerPanel.Name = "scannerPanel";
-            scannerPanel.Size = new Size(800, 450);
-            scannerPanel.TabIndex = 0;
-            // 
             // scanPictureBox
             // 
-            scanPictureBox.Location = new Point(227, 28);
+            scanPictureBox.Location = new Point(168, 46);
             scanPictureBox.Name = "scanPictureBox";
-            scanPictureBox.Size = new Size(313, 308);
+            scanPictureBox.Size = new Size(391, 332);
             scanPictureBox.TabIndex = 0;
             scanPictureBox.TabStop = false;
             // 
-            // scanBtn
+            // timerScan
             // 
-            scanBtn.Location = new Point(326, 415);
-            scanBtn.Name = "scanBtn";
-            scanBtn.Size = new Size(99, 23);
-            scanBtn.TabIndex = 1;
-            scanBtn.Text = "OK";
-            scanBtn.UseVisualStyleBackColor = true;
-            scanBtn.Click += scanBtn_Click;
-            // 
-            // exampleTextBox
-            // 
-            exampleTextBox.Location = new Point(227, 374);
-            exampleTextBox.Name = "exampleTextBox";
-            exampleTextBox.Size = new Size(313, 23);
-            exampleTextBox.TabIndex = 2;
+            timerScan.Tick += timerScan_Tick;
             // 
             // ScannerForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(scannerPanel);
+            Controls.Add(scanPictureBox);
             Name = "ScannerForm";
-            Text = "Scanner";
-            scannerPanel.ResumeLayout(false);
-            scannerPanel.PerformLayout();
+            Text = "QrCode Scanner";
+            FormClosed += ScannerForm_FormClosed;
+            Load += ScannerForm_Load;
             ((System.ComponentModel.ISupportInitialize)scanPictureBox).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
 
-        private Panel scannerPanel;
-        private Button scanBtn;
         private PictureBox scanPictureBox;
-        private TextBox exampleTextBox;
+        private System.Windows.Forms.Timer timerScan;
     }
 }
