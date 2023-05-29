@@ -1,4 +1,4 @@
-﻿namespace MobileAppV2.Models
+﻿namespace TerminalApp.Models
 {
     internal class Student
     {
@@ -11,10 +11,5 @@
         public bool? IsActive { get; set; }
 
         public string MacAdress { get; set; }
-
-        public override string ToString()
-        {
-            return $"StudentID: {StudentID}, Firstname: {Firstname}, Lastname: {Lastname}, IsActive: {IsActive}, MacAdress: {MacAdress}";
-        }
     }
 }

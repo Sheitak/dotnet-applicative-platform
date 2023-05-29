@@ -20,7 +20,7 @@ namespace WebAPI.Controllers
         }
 
         // POST: api/Users
-        [Authorize]
+        //[Authorize]
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {

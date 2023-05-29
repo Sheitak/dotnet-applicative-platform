@@ -131,6 +131,8 @@ namespace WebAPI.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Firstname = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Lastname = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: true),
+                    MacAdress = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     GroupID = table.Column<int>(type: "int", nullable: true),
                     PromotionID = table.Column<int>(type: "int", nullable: true)
                 },
@@ -153,7 +155,8 @@ namespace WebAPI.Migrations
                 name: "Signature",
                 columns: table => new
                 {
-                    SignatureID = table.Column<int>(type: "int", nullable: false),
+                    SignatureID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsPresent = table.Column<bool>(type: "bit", nullable: false),
                     StudentID = table.Column<int>(type: "int", nullable: false)

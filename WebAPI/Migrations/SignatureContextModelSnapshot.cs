@@ -190,7 +190,10 @@ namespace WebAPI.Migrations
             modelBuilder.Entity("WebAPI.Models.Signature", b =>
                 {
                     b.Property<int>("SignatureID")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SignatureID"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");

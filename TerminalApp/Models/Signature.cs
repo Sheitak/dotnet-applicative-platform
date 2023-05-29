@@ -1,19 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace WebAPI.Models.DTO
+﻿namespace TerminalApp.Models
 {
-    public class SignatureDTO
+    internal class Signature
     {
         public int SignatureID { get; set; }
 
-        [Required]
         public DateTime CreatedAt { get; set; }
 
-        [Required]
         public bool IsPresent { get; set; }
 
         public int StudentID { get; set; }
-
-        public StudentDTO? Student { get; set; }
     }
 }

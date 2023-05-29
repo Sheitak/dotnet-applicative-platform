@@ -57,16 +57,16 @@ namespace WebAPI.Data
 
             var signatures = new Signature[]
             {
-                new Signature{ SignatureID=1050, CreatedAt=DateTime.Parse("2022-09-01"), IsPresent=false, StudentID=1},
-                new Signature{ SignatureID=1051, CreatedAt=DateTime.Parse("2022-09-02"), IsPresent=true, StudentID=1},
-                new Signature{ SignatureID=1052, CreatedAt=DateTime.Parse("2022-09-03"), IsPresent=true, StudentID=1},
-                new Signature{ SignatureID=1053, CreatedAt=DateTime.Parse("2022-09-04"), IsPresent=true, StudentID=1},
-                new Signature{ SignatureID=1054, CreatedAt=DateTime.Parse("2005-02-02"), IsPresent=false, StudentID=2},
-                new Signature{ SignatureID=1055, CreatedAt=DateTime.Parse("2005-02-03"), IsPresent=false, StudentID=2},
-                new Signature{ SignatureID=1056, CreatedAt=DateTime.Parse("2021-01-01"), IsPresent=true, StudentID=3},
-                new Signature{ SignatureID=1057, CreatedAt=DateTime.Parse("2020-07-10"), IsPresent=false, StudentID=4},
-                new Signature{ SignatureID=1058, CreatedAt=DateTime.Parse("2020-07-11"), IsPresent=true, StudentID=4},
-                new Signature{ SignatureID=1059, CreatedAt=DateTime.Parse("2018-05-18"), IsPresent=false, StudentID=5},
+                new Signature{ CreatedAt=DateTime.Parse("2022-09-01"), IsPresent=false, StudentID=1},
+                new Signature{ CreatedAt=DateTime.Parse("2022-09-02"), IsPresent=true, StudentID=1},
+                new Signature{ CreatedAt=DateTime.Parse("2022-09-03"), IsPresent=true, StudentID=1},
+                new Signature{ CreatedAt=DateTime.Parse("2022-09-04"), IsPresent=true, StudentID=1},
+                new Signature{ CreatedAt=DateTime.Parse("2005-02-02"), IsPresent=false, StudentID=2},
+                new Signature{ CreatedAt=DateTime.Parse("2005-02-03"), IsPresent=false, StudentID=2},
+                new Signature{ CreatedAt=DateTime.Parse("2021-01-01"), IsPresent=true, StudentID=3},
+                new Signature{ CreatedAt=DateTime.Parse("2020-07-10"), IsPresent=false, StudentID=4},
+                new Signature{ CreatedAt=DateTime.Parse("2020-07-11"), IsPresent=true, StudentID=4},
+                new Signature{ CreatedAt=DateTime.Parse("2018-05-18"), IsPresent=false, StudentID=5},
             };
             foreach (Signature signature in signatures)
             {

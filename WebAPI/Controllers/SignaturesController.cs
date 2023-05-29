@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Data;
 using WebAPI.Models;
+using WebAPI.Models.DTO;
 using WebAppMVC.Models;
 
 namespace WebAPI.Controllers
@@ -24,15 +20,37 @@ namespace WebAPI.Controllers
         }
 
         // GET: api/Signatures
-        [Authorize]
+        //[Authorize]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Signature>>> GetSignatures()
+        public async Task<ActionResult<IEnumerable<SignatureDTO>>> GetSignatures()
         {
-          if (_context.Signatures == null)
-          {
-              return NotFound();
-          }
-            return await _context.Signatures.ToListAsync();
+            if (_context.Signatures == null)
+            {
+                return NotFound();
+            }
+
+            return await _context.Signatures.Select(s => new SignatureDTO
+            {
+                SignatureID = s.SignatureID,
+                CreatedAt = s.CreatedAt,
+                IsPresent = s.IsPresent,
+                Student = new StudentDTO
+                {
+                    StudentID = s.Student.StudentID,
+                    Firstname = s.Student.Firstname,
+                    Lastname = s.Student.Lastname,
+                    Group = new GroupDTO
+                    {
+                        GroupID = s.Student.Group.GroupID,
+                        Name = s.Student.Group.Name
+                    },
+                    Promotion = new PromotionDTO
+                    {
+                        PromotionID = s.Student.Promotion.PromotionID,
+                        Name = s.Student.Promotion.Name
+                    }
+                }
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -55,10 +73,11 @@ namespace WebAPI.Controllers
                     s.SignatureID,
                     s.CreatedAt,
                     s.IsPresent,
-                    Student = new {
-                        s.Student.Firstname, 
+                    Student = new
+                    {
+                        s.Student.Firstname,
                         s.Student.Lastname,
-                        Group = new 
+                        Group = new
                         {
                             s.Student.Group.GroupID,
                             s.Student.Group.Name
@@ -80,22 +99,55 @@ namespace WebAPI.Controllers
         }
 
         // GET: api/Signatures/5
-        [Authorize]
+        //[Authorize]
         [HttpGet("{id}")]
-        public async Task<ActionResult<Signature>> GetSignature(int id)
+        public async Task<ActionResult<SignatureDTO>> GetSignature(int id)
         {
-          if (_context.Signatures == null)
-          {
-              return NotFound();
-          }
-            var signature = await _context.Signatures.FindAsync(id);
+            if (_context.Signatures == null)
+            {
+                return NotFound();
+            }
+
+            var signature = await _context.Signatures
+                .Include(s => s.Student)
+                    .ThenInclude(s => s.Group)
+                .Include(s => s.Student)
+                    .ThenInclude(s => s.Promotion)
+                .FirstOrDefaultAsync(s => s.SignatureID == id)
+            ;
 
             if (signature == null)
             {
                 return NotFound();
             }
 
-            return signature;
+            if (signature.Student.Group == null || signature.Student.Promotion == null)
+            {
+                return BadRequest("Group or Promotion from Student signature not found");
+            }
+
+            return new SignatureDTO
+            {
+                SignatureID = signature.SignatureID,
+                CreatedAt = signature.CreatedAt,
+                IsPresent = signature.IsPresent,
+                Student = new StudentDTO
+                {
+                    StudentID = signature.Student.StudentID,
+                    Firstname = signature.Student.Firstname,
+                    Lastname = signature.Student.Lastname,
+                    Group = new GroupDTO
+                    {
+                        GroupID = signature.Student.Group.GroupID,
+                        Name = signature.Student.Group.Name
+                    },
+                    Promotion = new PromotionDTO
+                    {
+                        PromotionID = signature.Student.Promotion.PromotionID,
+                        Name = signature.Student.Promotion.Name
+                    }
+                }
+            };
         }
 
         // PUT: api/Signatures/5
@@ -130,19 +182,63 @@ namespace WebAPI.Controllers
             return NoContent();
         }
 
+
         // POST: api/Signatures
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Create a Signature.
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     POST api/Signatures
+        ///     {
+        ///         "createdAt": "25/05/2023 15:15:15",
+        ///         "IsPresent": true,
+        ///         "StudentID": 1
+        ///     }
+        /// </remarks>
+        /// <response code="201">Returns the newly created signature</response>
+        /// <response code="400">If the signature is null</response>
+        // <snippet_Create>
+        //[Authorize]
         [HttpPost]
-        public async Task<ActionResult<Signature>> PostSignature(Signature signature)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<SignatureDTO>> PostSignature(SignatureDTO signatureDTO)
         {
-          if (_context.Signatures == null)
-          {
-              return Problem("Entity set 'SignatureContext.Signatures'  is null.");
-          }
+            if (_context.Signatures == null)
+            {
+                return Problem("Entity set 'SignatureContext.Signatures'  is null.");
+            }
+
+            var targetStudent = await _context.Students
+                .Include(s => s.Group)
+                .Include(s => s.Promotion)
+                .FirstOrDefaultAsync(s => s.StudentID == signatureDTO.StudentID)
+            ;
+
+            if (targetStudent == null)
+            {
+                return BadRequest("Invalid Student ID");
+            }
+
+            var signature = new Signature
+            {
+                CreatedAt = signatureDTO.CreatedAt,
+                IsPresent = signatureDTO.IsPresent,
+                StudentID = signatureDTO.StudentID,
+                Student = targetStudent
+            };
+
             _context.Signatures.Add(signature);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetSignature", new { id = signature.SignatureID }, signature);
+            return CreatedAtAction(
+                nameof(GetSignature),
+                new { id = signature.SignatureID },
+                SignatureToDTO(signature)
+            );
         }
 
         // DELETE: api/Signatures/5
@@ -170,5 +266,28 @@ namespace WebAPI.Controllers
         {
             return (_context.Signatures?.Any(e => e.StudentID == id)).GetValueOrDefault();
         }
+
+        private static SignatureDTO SignatureToDTO(Signature signature) => new()
+        {
+            SignatureID = signature.SignatureID,
+            CreatedAt = signature.CreatedAt,
+            IsPresent = signature.IsPresent,
+            Student = new StudentDTO
+            {
+                StudentID = signature.Student.StudentID,
+                Firstname = signature.Student.Firstname,
+                Lastname = signature.Student.Lastname,
+                Group = new GroupDTO
+                {
+                    GroupID = signature.Student.Group.GroupID,
+                    Name = signature.Student.Group.Name
+                },
+                Promotion = new PromotionDTO
+                {
+                    PromotionID = signature.Student.Promotion.PromotionID,
+                    Name = signature.Student.Promotion.Name
+                }
+            }
+        };
     }
 }

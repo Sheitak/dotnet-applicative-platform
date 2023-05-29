@@ -12,7 +12,7 @@ using WebAPI.Data;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(SignatureContext))]
-    [Migration("20230421184002_Initial")]
+    [Migration("20230529083456_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -193,7 +193,10 @@ namespace WebAPI.Migrations
             modelBuilder.Entity("WebAPI.Models.Signature", b =>
                 {
                     b.Property<int>("SignatureID")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SignatureID"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -226,8 +229,14 @@ namespace WebAPI.Migrations
                     b.Property<int?>("GroupID")
                         .HasColumnType("int");
 
+                    b.Property<bool?>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Lastname")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MacAdress")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("PromotionID")

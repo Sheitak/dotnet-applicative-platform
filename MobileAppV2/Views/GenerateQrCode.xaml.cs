@@ -1,7 +1,11 @@
+using System.Text.Json.Serialization;
 using MobileAppV2.Models;
 using Newtonsoft.Json;
 using QRCoder;
 using System.Net.NetworkInformation;
+using System.Text.Json;
+using System.Text;
+using System.Net;
 
 namespace MobileAppV2.Views;
 
@@ -24,16 +28,19 @@ public partial class GenerateQrCode : ContentPage
     {
         var tempStudentId = 1;
         var tempMacAddress = "82A70095380Z";
+        // 82A70095380B
         var networkInformations = GetMacAddress();
 
         var student = await GetInformationsForGenerateQrCode(tempStudentId, networkInformations.ToString());
+        var jsonStudent = JsonConvert.SerializeObject(student);
+        // "{\"StudentID\":1,\"Firstname\":\"Carson\",\"Lastname\":\"Alexander\",\"IsActive\":true,\"MacAdress\":\"82A70095380B\"}"
+        var encodedJson = WebUtility.UrlEncode(jsonStudent);
 
-        var qrImageSource = CreateQrCode(student.ToString());
+        var qrImageSource = CreateQrCode(encodedJson);
 
-        MacAddress.Text = student.MacAdress;
-        // 82A70095380B
-
+        MacAddress.Text = jsonStudent;
         QrCodeImage.Source = qrImageSource;
+
 
         /* TODO: Mettre en place l'aspect visuel des retours pour UX
         } else if (student.MacAdress == networkInformations.ToString() && student.IsActive == false)
@@ -57,7 +64,7 @@ public partial class GenerateQrCode : ContentPage
     private static ImageSource CreateQrCode(string data)
     {
         QRCodeGenerator qrGenerator = new QRCodeGenerator();
-        QRCodeData qrCodeData = qrGenerator.CreateQrCode(data, QRCodeGenerator.ECCLevel.L);
+        QRCodeData qrCodeData = qrGenerator.CreateQrCode(WebUtility.UrlDecode(data), QRCodeGenerator.ECCLevel.L);
 
         PngByteQRCode qRCode = new PngByteQRCode(qrCodeData);
         byte[] qrCodeBytes = qRCode.GetGraphic(20);
