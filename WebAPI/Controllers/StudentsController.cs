@@ -26,6 +26,7 @@ namespace WebAPI.Controllers
             _context = context;
         }
 
+        // GET: api/Students
         /// <summary>
         /// Get all Students.
         /// </summary>
@@ -34,45 +35,39 @@ namespace WebAPI.Controllers
         /// <response code="400">If the students list is null</response>
         //[Authorize]
         [HttpGet]
-        //public async Task<ActionResult<IEnumerable<StudentDTO>>> GetStudents()
-        public async Task<ActionResult<IEnumerable<object>>> GetStudents()
+        public async Task<ActionResult<IEnumerable<StudentDTO>>> GetStudents()
         {
             if (_context.Students == null)
             {
                 return NotFound();
             }
 
-            // TODO: Pense à utiliser le DTO pour les étudiants
-
-            //return await _context.Students.ToListAsync();
-            //return await _context.Students.Select(x => StudentToDTO(x)).ToListAsync();
-
-            return await _context.Students
-                .Select(s => new
+            return await _context.Signatures.Select(s => new StudentDTO
+            {
+                StudentID = s.Student.StudentID,
+                Firstname = s.Student.Firstname,
+                Lastname = s.Student.Lastname,
+                Group = new GroupDTO
                 {
-                    s.StudentID,
-                    s.Firstname,
-                    s.Lastname,
-                    Group = new
-                    {
-                        s.GroupID,
-                        s.Group.Name
-                    },
-                    Promotion = new
-                    {
-                        s.PromotionID,
-                        s.Promotion.Name
-                    }
-                }).ToListAsync();
+                    GroupID = s.Student.Group.GroupID,
+                    Name = s.Student.Group.Name
+                },
+                Promotion = new PromotionDTO
+                {
+                    PromotionID = s.Student.Promotion.PromotionID,
+                    Name = s.Student.Promotion.Name
+                }
+            }).ToListAsync();
         }
 
+        // GET: api/Datatable/Students
         /// <summary>
         /// Get all Students for DataTable.
         /// </summary>
         /// <returns></returns>
         /// <response code="201">Returns all students correctly with complete DataTable</response>
         /// <response code="400">If the students list is null</response>
-        [HttpGet("/api/datatable/Students")]
+        [HttpGet("/api/Datatable/Students")]
         public async Task<ActionResult<DataTableResponse>> GetDataTableStudents()
         {
             if (_context.Students == null)
@@ -106,13 +101,14 @@ namespace WebAPI.Controllers
             };
         }
 
+        // GET: api/Datatable/Students/1
         /// <summary>
         /// Get One Student with Signature DataTable.
         /// </summary>
         /// <returns></returns>
         /// <response code="201">Returns one student correctly with complete Signature DataTable</response>
         /// <response code="400">If the student is null</response>
-        [HttpGet("/api/datatable/Student/{id}")]
+        [HttpGet("/api/Datatable/Student/{id}")]
         public async Task<ActionResult<DataTableResponse>> GetDataTableStudentSignatures(int id)
         {
             if (_context.Students == null)
@@ -147,12 +143,30 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET api/Students/GetById/1
+        ///     {
+        ///         "id": 1,
+        ///         "firstname": "John",
+        ///         "lastname": "Doe",
+        ///         "group": {
+        ///             "id": 1,
+        ///             "name": "Group"
+        ///         }
+        ///         "promotion": {
+        ///             "id": 1,
+        ///             "name": "Promotion"
+        ///         }
+        ///     }
+        /// </remarks>
         /// <response code="201">Returns the specific student correctly</response>
         /// <response code="400">If the student is null</response>
         // <snippet_GetById>
         //[Authorize]
         [HttpGet("GetById/{id}")]
-        public async Task<ActionResult<object>> GetStudent(int id)
+        public async Task<ActionResult<StudentDTO>> GetStudent(int id)
         {
             if (_context.Students == null)
             {
@@ -170,20 +184,25 @@ namespace WebAPI.Controllers
                 return NotFound();
             }
 
-            return new
+            if (student.Group == null || student.Promotion == null)
             {
-                student.StudentID,
-                student.Firstname,
-                student.Lastname,
-                Group = new
+                return BadRequest("Group or Promotion from Student not found");
+            }
+
+            return new StudentDTO
+            {
+                StudentID = student.StudentID,
+                Firstname = student.Firstname,
+                Lastname = student.Lastname,
+                Group = new GroupDTO
                 {
-                    student.Group.GroupID,
-                    student.Group.Name
+                    GroupID = student.Group.GroupID,
+                    Name = student.Group.Name
                 },
-                Promotion = new
+                Promotion = new PromotionDTO
                 {
-                    student.Promotion.PromotionID,
-                    student.Promotion.Name
+                    PromotionID = student.Promotion.PromotionID,
+                    Name = student.Promotion.Name
                 }
             };
         }
@@ -196,12 +215,24 @@ namespace WebAPI.Controllers
         /// <param name="id"></param>
         /// <param name="macAddress"></param>
         /// <returns></returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET api/Students/GetByIdWithMacAddress/1/82A70095380B
+        ///     {
+        ///         "id": 1,
+        ///         "firstname": "John",
+        ///         "lastname": "Doe",
+        ///         "isActive": true,
+        ///         "macAdress": "82A70095380B"
+        ///     }
+        /// </remarks>
         /// <response code="201">Returns the specific device student informations correctly</response>
         /// <response code="400">If the student is null</response>
         // <snippet_GetByIdWithMacAddress>
         //[Authorize]
         [HttpGet("GetByIdWithMacAddress/{id}/{macAddress}")]
-        public async Task<ActionResult<object>> GetStudentByIdWithMacAddress(int id, string macAddress)
+        public async Task<ActionResult<StudentDTO>> GetStudentByIdWithMacAddress(int id, string macAddress)
         {
             if (_context.Students == null)
             {
@@ -222,13 +253,13 @@ namespace WebAPI.Controllers
 
             if (student.MacAdress == macAddress && student.IsActive == true)
             {
-                return new
+                return new StudentDTO
                 {
-                    student.StudentID,
-                    student.Firstname,
-                    student.Lastname,
-                    student.IsActive,
-                    student.MacAdress
+                    StudentID = student.StudentID,
+                    Firstname = student.Firstname,
+                    Lastname = student.Lastname,
+                    IsActive = student.IsActive,
+                    MacAdress = student.MacAdress
                 };
             }
 
@@ -247,6 +278,7 @@ namespace WebAPI.Controllers
         /// Update a specific Student.
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="studentDTO"></param>
         /// <returns></returns>
         /// <remarks>
         /// Sample request:
@@ -254,8 +286,8 @@ namespace WebAPI.Controllers
         ///     PUT api/Students/1
         ///     {
         ///         "id": 1,
-        ///         "firstname": "Student",
-        ///         "lastname": "UPDATED",
+        ///         "firstname": "John",
+        ///         "lastname": "UPDATE",
         ///         "group": {
         ///             "id": 1,
         ///             "name": "Group"
@@ -280,9 +312,12 @@ namespace WebAPI.Controllers
                 return BadRequest();
             }
 
-            //_context.Entry(student).State = EntityState.Modified;
+            var student = await _context.Students
+                .Include(s => s.Group)
+                .Include(s => s.Promotion)
+                .FirstOrDefaultAsync(s => s.StudentID == id)
+            ;
 
-            var student = await _context.Students.FindAsync(id);
             if (student == null)
             {
                 return NotFound();
@@ -291,27 +326,32 @@ namespace WebAPI.Controllers
             student.Firstname = studentDTO.Firstname;
             student.Lastname = studentDTO.Lastname;
 
-            // UPDATE GROUP
-            var newStudentGroup = await _context.Groups.FindAsync(studentDTO.Group.GroupID);
+            if (studentDTO.Group == null || studentDTO.Promotion == null)
+            {
+                return BadRequest("Group or Promotion from Student not found");
+            }
 
-            if (newStudentGroup == null)
+            // UPDATE GROUP
+            var targetStudentGroup = await _context.Groups.FindAsync(studentDTO.Group.GroupID);
+
+            if (targetStudentGroup == null)
             {
                 return BadRequest("Invalid Group ID");
             }
 
             student.GroupID = studentDTO.Group.GroupID;
-            student.Group = newStudentGroup;
+            student.Group = targetStudentGroup;
 
             // UPDATE PROMOTION
-            var newStudentPromotion = await _context.Promotions.FindAsync(studentDTO.PromotionID);
+            var targetStudentPromotion = await _context.Promotions.FindAsync(studentDTO.PromotionID);
 
-            if (newStudentPromotion == null)
+            if (targetStudentPromotion == null)
             {
                 return BadRequest("Invalid Promotion ID");
             }
 
             student.PromotionID = studentDTO.Promotion.PromotionID;
-            student.Promotion = newStudentPromotion;
+            student.Promotion = targetStudentPromotion;
 
             try
             {
@@ -337,8 +377,8 @@ namespace WebAPI.Controllers
         ///
         ///     POST api/Students
         ///     {
-        ///         "firstname": "Student",
-        ///         "lastname": "Student",
+        ///         "firstname": "Jane",
+        ///         "lastname": "Doe",
         ///         "group": {
         ///             "id": 1,
         ///             "name": "Group"
@@ -363,7 +403,6 @@ namespace WebAPI.Controllers
                 return Problem("Entity set 'SignatureContext.Students'  is null.");
             }
 
-            // UPDATE GROUP
             var studentGroup = await _context.Groups.FindAsync(studentDTO.GroupID);
 
             if (studentGroup == null)
@@ -371,7 +410,6 @@ namespace WebAPI.Controllers
                 return BadRequest("Invalid Group ID");
             }
 
-            // UPDATE PROMOTION
             var studentPromotion = await _context.Promotions.FindAsync(studentDTO.PromotionID);
 
             if (studentPromotion == null)

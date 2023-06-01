@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             ImportLabel = new Label();
-            csvImportButton = new Button();
+            CSVImportButton = new Button();
             SuspendLayout();
             // 
             // ImportLabel
@@ -41,15 +41,15 @@
             ImportLabel.TabIndex = 5;
             ImportLabel.Text = "Veuillez sélectionner un format pour importer";
             // 
-            // csvImportButton
+            // CSVImportButton
             // 
-            csvImportButton.Location = new Point(328, 230);
-            csvImportButton.Name = "csvImportButton";
-            csvImportButton.Size = new Size(107, 23);
-            csvImportButton.TabIndex = 4;
-            csvImportButton.Text = "CSV";
-            csvImportButton.UseVisualStyleBackColor = true;
-            csvImportButton.Click += csvImportButton_Click;
+            CSVImportButton.Location = new Point(328, 230);
+            CSVImportButton.Name = "CSVImportButton";
+            CSVImportButton.Size = new Size(107, 23);
+            CSVImportButton.TabIndex = 4;
+            CSVImportButton.Text = "CSV";
+            CSVImportButton.UseVisualStyleBackColor = true;
+            CSVImportButton.Click += CSVImportButton_Click;
             // 
             // ImportPromotionsForm
             // 
@@ -57,7 +57,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
             Controls.Add(ImportLabel);
-            Controls.Add(csvImportButton);
+            Controls.Add(CSVImportButton);
             Name = "ImportPromotionsForm";
             Text = "Importer des promotions";
             ResumeLayout(false);
@@ -67,6 +67,6 @@
         #endregion
 
         private Label ImportLabel;
-        private Button csvImportButton;
+        private Button CSVImportButton;
     }
 }

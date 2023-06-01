@@ -20,6 +20,12 @@ namespace WebAPI.Controllers
         }
 
         // GET: api/Signatures
+        /// <summary>
+        /// Get all Signatures.
+        /// </summary>
+        /// <returns></returns>
+        /// <response code="201">Returns all signatures correctly</response>
+        /// <response code="400">If the signatures list is null</response>
         //[Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SignatureDTO>>> GetSignatures()
@@ -98,7 +104,25 @@ namespace WebAPI.Controllers
             };
         }
 
-        // GET: api/Signatures/5
+        // GET: api/Signatures/1
+        /// <summary>
+        /// Get a specific Signature.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET api/Signatures/1
+        ///     {
+        ///         "createdAt": "25/05/2023 15:15:15",
+        ///         "IsPresent": true,
+        ///         "StudentID": 1
+        ///     }
+        /// </remarks>
+        /// <response code="201">Returns the specific signature correctly</response>
+        /// <response code="400">If the signature is null</response>
+        // <snippet_GetById>
         //[Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<SignatureDTO>> GetSignature(int id)
@@ -152,6 +176,17 @@ namespace WebAPI.Controllers
 
         // PUT: api/Signatures/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Update a specific Signature.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="signature"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// </remarks>
+        /// <response code="201">Returns the updated signature correctly</response>
+        /// <response code="400">If the signature is null</response>
+        // <snippet_Update>
         [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSignature(int id, Signature signature)

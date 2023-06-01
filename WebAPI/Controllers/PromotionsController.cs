@@ -19,6 +19,12 @@ namespace WebAPI.Controllers
         }
 
         // GET: api/Promotions
+        /// <summary>
+        /// Get all Promotions.
+        /// </summary>
+        /// <returns></returns>
+        /// <response code="201">Returns all promotions correctly</response>
+        /// <response code="400">If the promotions list is null</response>
         //[Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Promotion>>> GetPromotions()
@@ -30,7 +36,24 @@ namespace WebAPI.Controllers
             return await _context.Promotions.ToListAsync();
         }
 
-        // GET: api/Promotions/5
+        // GET: api/Promotions//5
+        /// <summary>
+        /// Get a specific Promotion.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET api/Promotions/1
+        ///     {
+        ///         "id": 1,
+        ///         "name": "Promotion"
+        ///     }
+        /// </remarks>
+        /// <response code="201">Returns the specific promotion correctly</response>
+        /// <response code="400">If the promotion is null</response>
+        // <snippet_GetById>
         //[Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Promotion>> GetPromotion(int id)
@@ -50,6 +73,24 @@ namespace WebAPI.Controllers
         }
 
         // GET: api/Promotions/ByName/{name}
+        /// <summary>
+        /// Get a specific Promotion.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET api/Promotions/Example
+        ///     {
+        ///         "id": 1,
+        ///         "name": "Example"
+        ///     }
+        /// </remarks>
+        /// <response code="201">Returns the specific promotion correctly</response>
+        /// <response code="400">If the promotion is null</response>
+        // <snippet_GetByName>
+        //[Authorize]
         [HttpGet("ByName/{name}")]
         public async Task<ActionResult<Promotion>> GetPromotionByName(string name)
         {

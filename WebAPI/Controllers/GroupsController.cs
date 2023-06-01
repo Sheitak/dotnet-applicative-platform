@@ -23,6 +23,13 @@ namespace WebAPI.Controllers
         }
 
         // GET: api/Groups
+        /// <summary>
+        /// Get all Groups.
+        /// </summary>
+        /// <returns></returns>
+        /// <response code="201">Returns all groups correctly</response>
+        /// <response code="400">If the groups list is null</response>
+        //[Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Group>>> GetGroups()
         {
@@ -34,6 +41,24 @@ namespace WebAPI.Controllers
         }
 
         // GET: api/Groups/5
+        /// <summary>
+        /// Get a specific Group.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET api/Groups/1
+        ///     {
+        ///         "id": 1,
+        ///         "name": "Group"
+        ///     }
+        /// </remarks>
+        /// <response code="201">Returns the specific group correctly</response>
+        /// <response code="400">If the group is null</response>
+        // <snippet_GetById>
+        //[Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Group>> GetGroup(int id)
         {
@@ -53,6 +78,24 @@ namespace WebAPI.Controllers
         }
 
         // GET: api/Groups/ByName/{name}
+        /// <summary>
+        /// Get a specific Group.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET api/Groups/Example
+        ///     {
+        ///         "id": 1,
+        ///         "name": "Example"
+        ///     }
+        /// </remarks>
+        /// <response code="201">Returns the specific group correctly</response>
+        /// <response code="400">If the group is null</response>
+        // <snippet_GetByName>
+        //[Authorize]
         [HttpGet("ByName/{name}")]
         public async Task<ActionResult<Group>> GetGroupByName(string name)
         {

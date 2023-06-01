@@ -59,6 +59,7 @@
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="QRCoder" Version="1.4.3" />
 		<PackageReference Include="QRCoder-ImageSharp" Version="0.9.0" />
+		<PackageReference Include="Xamarin.Essentials" Version="1.7.5" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -68,10 +69,6 @@
 	  <MauiXaml Update="Views\GenerateQrCode.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Services\" />
 	</ItemGroup>
 
 </Project>

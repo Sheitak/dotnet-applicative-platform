@@ -1,23 +1,22 @@
-using System.Text.Json.Serialization;
-using MobileAppV2.Models;
+using MobileAppV2.Services;
 using Newtonsoft.Json;
 using QRCoder;
-using System.Net.NetworkInformation;
-using System.Text.Json;
-using System.Text;
 using System.Net;
+using System.Net.NetworkInformation;
 
 namespace MobileAppV2.Views;
 
 public partial class GenerateQrCode : ContentPage
 {
-	public GenerateQrCode()
-	{
-		InitializeComponent();
+    readonly DataSourceProvider dataSourceProvider = DataSourceProvider.GetInstance();
+
+    public GenerateQrCode()
+    {
+        InitializeComponent();
         BindingContext = App.student;
 
         SignatureLabel.Text = "Votre QrCode pour le : " + DateTime.Now.ToString("dd/MM/yyyy") + " à " + DateTime.Now.ToString("HH:mm:ss");
-	}
+    }
 
     private void GenerateQrCodeButton_Clicked(object sender, EventArgs e)
     {
@@ -31,7 +30,7 @@ public partial class GenerateQrCode : ContentPage
         // 82A70095380B
         var networkInformations = GetMacAddress();
 
-        var student = await GetInformationsForGenerateQrCode(tempStudentId, networkInformations.ToString());
+        var student = await dataSourceProvider.GetInformationsForGenerateQrCode(tempStudentId, networkInformations.ToString());
         var jsonStudent = JsonConvert.SerializeObject(student);
         // "{\"StudentID\":1,\"Firstname\":\"Carson\",\"Lastname\":\"Alexander\",\"IsActive\":true,\"MacAdress\":\"82A70095380B\"}"
         var encodedJson = WebUtility.UrlEncode(jsonStudent);
@@ -71,24 +70,6 @@ public partial class GenerateQrCode : ContentPage
         ImageSource qrImageSource = ImageSource.FromStream(() => new MemoryStream(qrCodeBytes));
 
         return qrImageSource;
-    }
-
-    private async Task<Student> GetInformationsForGenerateQrCode(int id, string macAddress)
-    {
-        Student student = new Student();
-
-        using (var client = new HttpClient())
-        {
-            HttpResponseMessage response = await client.GetAsync("http://10.0.2.2:5283/api/Students/GetByIdWithMacAddress/" + id + "/" + macAddress);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var responseString = await response.Content.ReadAsStringAsync();
-
-                student = JsonConvert.DeserializeObject<Student>(responseString);
-            }
-            return student;
-        }
     }
 
     private static PhysicalAddress GetMacAddress()

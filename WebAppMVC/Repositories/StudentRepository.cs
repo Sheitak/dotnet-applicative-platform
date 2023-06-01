@@ -9,34 +9,30 @@ namespace WebAppMVC.Repositories
 
         public async Task<List<Student>> GetAllStudents()
         {
-            List<Student> studentsList =  new List<Student>();
-            
-            using (var client = new HttpClient())
+            using var client = new HttpClient();
+            HttpResponseMessage response = await client.GetAsync("https://localhost:7058/api/Students");
+
+            if (response.IsSuccessStatusCode)
             {
-                HttpResponseMessage response = await client.GetAsync("https://localhost:7058/api/Students");
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseString = await response.Content.ReadAsStringAsync();
-
-                    studentsList = JsonConvert.DeserializeObject<List<Student>>(responseString);
-                }
+                var responseString = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<List<Student>>(responseString);
             }
-            return studentsList;
+
+            return new List<Student>();
         }
 
         public async Task<Student> GetStudent(int id)
         {
             using var client = new HttpClient();
-            HttpResponseMessage response = await client.GetAsync("https://localhost:7058/api/Students/GetById/" + id);
+            HttpResponseMessage response = await client.GetAsync($"https://localhost:7058/api/Students/GetById/{id}");
 
             if (response.IsSuccessStatusCode)
             {
                 var responseString = await response.Content.ReadAsStringAsync();
-
                 return JsonConvert.DeserializeObject<Student>(responseString);
             }
-            throw new Exception();
+
+            throw new Exception("Failed to retrieve student.");
         }
     }
 }

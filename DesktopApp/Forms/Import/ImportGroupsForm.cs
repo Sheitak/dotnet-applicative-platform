@@ -1,10 +1,12 @@
 ﻿using DesktopApp.Models;
+using DesktopApp.Services;
 
 namespace DesktopApp.Forms
 {
     public partial class ImportGroupsForm : Form
     {
-        Group group = new Group();
+        readonly DataSourceProvider dataSourceProvider = DataSourceProvider.GetInstance();
+        Group group = new();
 
         public ImportGroupsForm()
         {
@@ -12,11 +14,13 @@ namespace DesktopApp.Forms
             CenterToScreen();
         }
 
-        private async void csvImportButton_Click(object sender, EventArgs e)
+        private async void CSVImportButton_Click(object sender, EventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "CSV files (*.csv)|*.csv";
-            openFileDialog.RestoreDirectory = true;
+            OpenFileDialog openFileDialog = new()
+            {
+                Filter = "CSV files (*.csv)|*.csv",
+                RestoreDirectory = true
+            };
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string filePath = openFileDialog.FileName;
@@ -25,28 +29,24 @@ namespace DesktopApp.Forms
                 foreach (string[] row in csvData)
                 {
                     group.Name = row[0];
-
-                    await CreateGroup(group);
+                    await dataSourceProvider.CreateGroup(group);
                 }
-
                 MessageBox.Show("Les groupes ont été importés avec succès !");
             }
         }
 
         public List<string[]> ImportCsv(string filePath, char delimiter)
         {
-            List<string[]> csvData = new List<string[]>();
+            List<string[]> csvData = new();
 
             try
             {
-                using (StreamReader reader = new StreamReader(filePath))
+                using StreamReader reader = new(filePath);
+                string line;
+                while ((line = reader.ReadLine()) != null)
                 {
-                    string line;
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        string[] fields = line.Split(delimiter);
-                        csvData.Add(fields);
-                    }
+                    string[] fields = line.Split(delimiter);
+                    csvData.Add(fields);
                 }
             }
             catch (Exception ex)
@@ -55,20 +55,6 @@ namespace DesktopApp.Forms
             }
 
             return csvData;
-        }
-
-        private async Task<Group> CreateGroup(Group group)
-        {
-            using (var client = new HttpClient())
-            {
-                HttpResponseMessage response = await client.PostAsJsonAsync(
-                    "https://localhost:7058/api/Groups",
-                    group
-                );
-                response.EnsureSuccessStatusCode();
-
-                return await response.Content.ReadAsAsync<Group>();
-            }
         }
     }
 }

@@ -1,17 +1,15 @@
 using DesktopApp.Forms;
 using DesktopApp.Models;
-using Newtonsoft.Json;
-using System.Data;
-using System.Net.Http.Json;
+using DesktopApp.Services;
 
 namespace DesktopApp
 {
     public partial class FormInterface : Form
     {
-        static readonly string urlBase = "https://localhost:7058/api";
-        Student student = new Student();
-        Group group = new Group();
-        Promotion promotion = new Promotion();
+        readonly DataSourceProvider dataSourceProvider = DataSourceProvider.GetInstance();
+        Student student = new();
+        Group group = new();
+        Promotion promotion = new();
 
         public FormInterface()
         {
@@ -24,7 +22,7 @@ namespace DesktopApp
             CentralFlowLayoutPanel.Controls.Clear();
             ListFlowLayoutPanel.Controls.Clear();
 
-            var studentList = await GetStudents();
+            var studentList = await dataSourceProvider.GetStudents();
 
             // PANEL GAUCHE
             ListView studentListView = new ListView();
@@ -58,7 +56,7 @@ namespace DesktopApp
             CentralFlowLayoutPanel.Controls.Clear();
             ListFlowLayoutPanel.Controls.Clear();
 
-            var groupList = await GetGroups();
+            var groupList = await dataSourceProvider.GetGroups();
 
             // PANEL GAUCHE
             ListView groupListView = new ListView();
@@ -92,7 +90,7 @@ namespace DesktopApp
             CentralFlowLayoutPanel.Controls.Clear();
             ListFlowLayoutPanel.Controls.Clear();
 
-            var promotionList = await GetPromotions();
+            var promotionList = await dataSourceProvider.GetPromotions();
 
             // PANEL GAUCHE
             ListView promotionListView = new ListView();
@@ -174,15 +172,15 @@ namespace DesktopApp
                 switch (btnSubmit.Name)
                 {
                     case "submitEditStudentButton":
-                        await UpdateStudent(student);
+                        await dataSourceProvider.UpdateStudent(student);
                         MessageBox.Show("L'étudiant " + student.Firstname + " " + student.Lastname + " a été modifié avec succès !");
                         break;
                     case "submitEditGroupButton":
-                        await UpdateGroup(group);
+                        await dataSourceProvider.UpdateGroup(group);
                         MessageBox.Show("Le groupe " + group.Name + " a été modifié avec succès !");
                         break;
                     case "submitEditPromotionButton":
-                        await UpdatePromotion(promotion);
+                        await dataSourceProvider.UpdatePromotion(promotion);
                         MessageBox.Show("La promotion " + promotion.Name + " a été modifiée avec succès !");
                         break;
                 }
@@ -219,7 +217,7 @@ namespace DesktopApp
         {
             CentralFlowLayoutPanel.Controls.Clear();
 
-            await GetStudentById(studentId);
+            student = await dataSourceProvider.GetStudentById(studentId);
 
             // ID
             Label studentIDLabel = new Label();
@@ -273,7 +271,7 @@ namespace DesktopApp
             groupList.DisplayMember = "Name";
             groupList.DropDownStyle = ComboBoxStyle.DropDownList;
 
-            var groups = await GetGroups();
+            var groups = await dataSourceProvider.GetGroups();
 
             groups.Insert(0, new Group { GroupID = student.Group.GroupID, Name = student.Group.Name });
             groupList.DataSource = groups;
@@ -303,7 +301,7 @@ namespace DesktopApp
             promotionList.DisplayMember = "Name";
             promotionList.DropDownStyle = ComboBoxStyle.DropDownList;
 
-            var promotions = await GetPromotions();
+            var promotions = await dataSourceProvider.GetPromotions();
 
             promotions.Insert(0, new Promotion { PromotionID = student.Promotion.PromotionID, Name = student.Promotion.Name });
             promotionList.DataSource = promotions;
@@ -338,7 +336,7 @@ namespace DesktopApp
         {
             CentralFlowLayoutPanel.Controls.Clear();
 
-            await GetGroupById(groupId);
+            group = await dataSourceProvider.GetGroupById(groupId);
 
             // ID
             Label groupIDLabel = new Label();
@@ -382,7 +380,7 @@ namespace DesktopApp
         {
             CentralFlowLayoutPanel.Controls.Clear();
 
-            await GetPromotionById(promotionId);
+            promotion = await dataSourceProvider.GetPromotionById(promotionId);
 
             // ID
             Label promotionIDLabel = new Label();
@@ -422,155 +420,6 @@ namespace DesktopApp
             CentralFlowLayoutPanel.FlowDirection = FlowDirection.TopDown;
         }
 
-        private async Task<List<Student>> GetStudents()
-        {
-            List<Student> studentList = new List<Student>();
-
-            using (var client = new HttpClient())
-            {
-                HttpResponseMessage response = await client.GetAsync("https://localhost:7058/api/Students");
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseString = await response.Content.ReadAsStringAsync();
-
-                    studentList = JsonConvert.DeserializeObject<List<Student>>(responseString);
-                }
-                return studentList;
-            }
-        }
-
-        private async Task<List<Group>> GetGroups()
-        {
-            List<Group> groupList = new List<Group>();
-
-            using (var client = new HttpClient())
-            {
-                HttpResponseMessage response = await client.GetAsync("https://localhost:7058/api/Groups");
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseString = await response.Content.ReadAsStringAsync();
-
-                    groupList = JsonConvert.DeserializeObject<List<Group>>(responseString);
-                }
-
-                return groupList;
-            }
-        }
-
-        private async Task<List<Promotion>> GetPromotions()
-        {
-            List<Promotion> promotionList = new List<Promotion>();
-
-            using (var client = new HttpClient())
-            {
-                HttpResponseMessage response = await client.GetAsync("https://localhost:7058/api/Promotions");
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseString = await response.Content.ReadAsStringAsync();
-
-                    promotionList = JsonConvert.DeserializeObject<List<Promotion>>(responseString);
-                }
-
-                return promotionList;
-            }
-        }
-
-        private async Task<Student> GetStudentById(int id)
-        {
-            using (var client = new HttpClient())
-            {
-                HttpResponseMessage response = await client.GetAsync("https://localhost:7058/api/Students/" + id);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseString = await response.Content.ReadAsStringAsync();
-
-                    student = JsonConvert.DeserializeObject<Student>(responseString);
-                }
-
-                return student;
-            }
-        }
-
-        private async Task<Group> GetGroupById(int id)
-        {
-            using (var client = new HttpClient())
-            {
-                HttpResponseMessage response = await client.GetAsync("https://localhost:7058/api/Groups/" + id);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseString = await response.Content.ReadAsStringAsync();
-
-                    group = JsonConvert.DeserializeObject<Group>(responseString);
-                }
-
-                return group;
-            }
-        }
-
-        private async Task<Promotion> GetPromotionById(int id)
-        {
-            using (var client = new HttpClient())
-            {
-                HttpResponseMessage response = await client.GetAsync("https://localhost:7058/api/Promotions/" + id);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseString = await response.Content.ReadAsStringAsync();
-
-                    promotion = JsonConvert.DeserializeObject<Promotion>(responseString);
-                }
-
-                return promotion;
-            }
-        }
-
-        private async Task<Student> UpdateStudent(Student student)
-        {
-            using (var client = new HttpClient())
-            {
-                HttpResponseMessage response = await client.PutAsJsonAsync(
-                    "https://localhost:7058/api/Students/" + student.StudentID,
-                    student
-                );
-                response.EnsureSuccessStatusCode();
-
-                return await response.Content.ReadAsAsync<Student>();
-            }
-        }
-
-        private async Task<Group> UpdateGroup(Group group)
-        {
-            using (var client = new HttpClient())
-            {
-                HttpResponseMessage response = await client.PutAsJsonAsync(
-                    "https://localhost:7058/api/Groups/" + group.GroupID,
-                    group
-                );
-                response.EnsureSuccessStatusCode();
-
-                return await response.Content.ReadAsAsync<Group>();
-            }
-        }
-
-        private async Task<Promotion> UpdatePromotion(Promotion promotion)
-        {
-            using (var client = new HttpClient())
-            {
-                HttpResponseMessage response = await client.PutAsJsonAsync(
-                    "https://localhost:7058/api/Promotions/" + promotion.PromotionID,
-                    promotion
-                );
-                response.EnsureSuccessStatusCode();
-
-                return await response.Content.ReadAsAsync<Promotion>();
-            }
-        }
-
         private void CreateStudent_Click(object sender, EventArgs e)
         {
             var createStudentForm = new CreateStudentForm();
@@ -587,7 +436,6 @@ namespace DesktopApp
             var createPromotionForm = new CreatePromotionForm();
             createPromotionForm.Show();
         }
-
 
         private void ImportStudents_Click(object sender, EventArgs e)
         {

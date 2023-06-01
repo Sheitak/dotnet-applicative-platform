@@ -1,10 +1,12 @@
 ﻿using DesktopApp.Models;
+using DesktopApp.Services;
 
 namespace DesktopApp.Forms
 {
     public partial class CreateGroupForm : Form
     {
-        Group group = new Group();
+        readonly DataSourceProvider dataSourceProvider = DataSourceProvider.GetInstance();
+        readonly Group group = new();
 
         public CreateGroupForm()
         {
@@ -16,27 +18,13 @@ namespace DesktopApp.Forms
         {
             try
             {
-                await CreateGroup(group);
+                await dataSourceProvider.CreateGroup(group);
                 MessageBox.Show("Le groupe " + group.Name + " a été créé avec succès !");
                 Hide();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-            }
-        }
-
-        private async Task<Group> CreateGroup(Group group)
-        {
-            using (var client = new HttpClient())
-            {
-                HttpResponseMessage response = await client.PostAsJsonAsync(
-                    "https://localhost:7058/api/Groups",
-                    group
-                );
-                response.EnsureSuccessStatusCode();
-
-                return await response.Content.ReadAsAsync<Group>();
             }
         }
 

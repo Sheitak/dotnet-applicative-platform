@@ -1,11 +1,12 @@
 ﻿using DesktopApp.Models;
-using Newtonsoft.Json;
+using DesktopApp.Services;
 
 namespace DesktopApp.Forms
 {
     public partial class ImportStudentsForm : Form
     {
-        Student student = new Student();
+        readonly DataSourceProvider dataSourceProvider = DataSourceProvider.GetInstance();
+        Student student = new();
 
         public ImportStudentsForm()
         {
@@ -13,11 +14,13 @@ namespace DesktopApp.Forms
             CenterToScreen();
         }
 
-        private async void csvImportButton_Click(object sender, EventArgs e)
+        private async void CSVImportButton_Click(object sender, EventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "CSV files (*.csv)|*.csv";
-            openFileDialog.RestoreDirectory = true;
+            OpenFileDialog openFileDialog = new()
+            {
+                Filter = "CSV files (*.csv)|*.csv",
+                RestoreDirectory = true
+            };
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string filePath = openFileDialog.FileName;
@@ -25,9 +28,9 @@ namespace DesktopApp.Forms
                 csvData.RemoveAt(0);
                 foreach (string[] row in csvData)
                 {
-                    var group = await GetGroupByName(row[2]);
-                    var promotion = await GetPromotionByName(row[3]);
-                    
+                    var group = await dataSourceProvider.GetGroupByName(row[2]);
+                    var promotion = await dataSourceProvider.GetPromotionByName(row[3]);
+
                     student.Firstname = row[0];
                     student.Lastname = row[1];
                     student.GroupID = group.GroupID;
@@ -43,7 +46,7 @@ namespace DesktopApp.Forms
                         Name = promotion.Name
                     };
 
-                    await CreateStudent(student);
+                    await dataSourceProvider.CreateStudent(student);
                 }
 
                 MessageBox.Show("Les étudiants ont été importés avec succès !");
@@ -52,78 +55,24 @@ namespace DesktopApp.Forms
 
         public List<string[]> ImportCsv(string filePath, char delimiter)
         {
-            List<string[]> csvData = new List<string[]>();
+            List<string[]> csvData = new();
 
             try
             {
-                using (StreamReader reader = new StreamReader(filePath))
+                using StreamReader reader = new(filePath);
+                string line;
+                while ((line = reader.ReadLine()) != null)
                 {
-                    string line;
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        string[] fields = line.Split(delimiter);
-                        csvData.Add(fields);
-                    }
+                    string[] fields = line.Split(delimiter);
+                    csvData.Add(fields);
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred while importing the CSV file: " + ex.Message);
+                Console.WriteLine($"An error occurred while importing the CSV file: {ex.Message}");
             }
 
             return csvData;
-        }
-
-        private async Task<Student> CreateStudent(Student student)
-        {
-            using (var client = new HttpClient())
-            {
-                HttpResponseMessage response = await client.PostAsJsonAsync(
-                    "https://localhost:7058/api/Students",
-                    student
-                );
-                response.EnsureSuccessStatusCode();
-
-                return await response.Content.ReadAsAsync<Student>();
-            }
-        }
-
-        private async Task<Group> GetGroupByName(string name)
-        {
-            Group group = new Group();
-
-            using (var client = new HttpClient())
-            {
-                HttpResponseMessage response = await client.GetAsync("https://localhost:7058/api/Groups/ByName/"+name);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseString = await response.Content.ReadAsStringAsync();
-
-                    group = JsonConvert.DeserializeObject<Group>(responseString);
-                }
-
-                return group;
-            }
-        }
-
-        private async Task<Promotion> GetPromotionByName(string name)
-        {
-            Promotion promotion = new Promotion();
-
-            using (var client = new HttpClient())
-            {
-                HttpResponseMessage response = await client.GetAsync("https://localhost:7058/api/Promotions/ByName/"+name);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseString = await response.Content.ReadAsStringAsync();
-
-                    promotion = JsonConvert.DeserializeObject<Promotion>(responseString);
-                }
-
-                return promotion;
-            }
         }
     }
 }

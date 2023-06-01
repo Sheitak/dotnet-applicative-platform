@@ -1,10 +1,12 @@
 ﻿using DesktopApp.Models;
+using DesktopApp.Services;
 
 namespace DesktopApp.Forms
 {
     public partial class CreatePromotionForm : Form
     {
-        Promotion promotion = new Promotion();
+        readonly DataSourceProvider dataSourceProvider = DataSourceProvider.GetInstance();
+        readonly Promotion promotion = new();
 
         public CreatePromotionForm()
         {
@@ -16,27 +18,13 @@ namespace DesktopApp.Forms
         {
             try
             {
-                await CreatePromotion(promotion);
+                await dataSourceProvider.CreatePromotion(promotion);
                 MessageBox.Show("La promotion " + promotion.Name + " a été créé avec succès !");
                 Hide();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-            }
-        }
-
-        private async Task<Promotion> CreatePromotion(Promotion promotion)
-        {
-            using (var client = new HttpClient())
-            {
-                HttpResponseMessage response = await client.PostAsJsonAsync(
-                    "https://localhost:7058/api/Promotions",
-                    promotion
-                );
-                response.EnsureSuccessStatusCode();
-
-                return await response.Content.ReadAsAsync<Promotion>();
             }
         }
 
