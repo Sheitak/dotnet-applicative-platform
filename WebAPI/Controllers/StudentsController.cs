@@ -42,20 +42,20 @@ namespace WebAPI.Controllers
                 return NotFound();
             }
 
-            return await _context.Signatures.Select(s => new StudentDTO
+            return await _context.Students.Select(s => new StudentDTO
             {
-                StudentID = s.Student.StudentID,
-                Firstname = s.Student.Firstname,
-                Lastname = s.Student.Lastname,
+                StudentID = s.StudentID,
+                Firstname = s.Firstname,
+                Lastname = s.Lastname,
                 Group = new GroupDTO
                 {
-                    GroupID = s.Student.Group.GroupID,
-                    Name = s.Student.Group.Name
+                    GroupID = s.Group.GroupID,
+                    Name = s.Group.Name
                 },
                 Promotion = new PromotionDTO
                 {
-                    PromotionID = s.Student.Promotion.PromotionID,
-                    Name = s.Student.Promotion.Name
+                    PromotionID = s.Promotion.PromotionID,
+                    Name = s.Promotion.Name
                 }
             }).ToListAsync();
         }
