@@ -19,8 +19,6 @@ namespace DesktopApp
 
         private async void LoadStudents_Click(object sender, EventArgs e)
         {
-            //CentralFlowLayoutPanel.Controls.Clear();
-            //ListFlowLayoutPanel.Controls.Clear();
             ClearFlowLayoutPanel(CentralFlowLayoutPanel);
             ClearFlowLayoutPanel(ListFlowLayoutPanel);
 
@@ -55,8 +53,6 @@ namespace DesktopApp
 
         private async void LoadGroups_Click(object sender, EventArgs e)
         {
-            //CentralFlowLayoutPanel.Controls.Clear();
-            //ListFlowLayoutPanel.Controls.Clear();
             ClearFlowLayoutPanel(CentralFlowLayoutPanel);
             ClearFlowLayoutPanel(ListFlowLayoutPanel);
 
@@ -91,8 +87,6 @@ namespace DesktopApp
 
         private async void LoadPromotions_Click(object sender, EventArgs e)
         {
-            //CentralFlowLayoutPanel.Controls.Clear();
-            //ListFlowLayoutPanel.Controls.Clear();
             ClearFlowLayoutPanel(CentralFlowLayoutPanel);
             ClearFlowLayoutPanel(ListFlowLayoutPanel);
 
@@ -221,7 +215,6 @@ namespace DesktopApp
 
         private async void LoadCentralStudentPanel(int studentId)
         {
-            //CentralFlowLayoutPanel.Controls.Clear();
             ClearFlowLayoutPanel(CentralFlowLayoutPanel);
 
             student = await dataSourceProvider.GetStudentById(studentId);
@@ -341,7 +334,6 @@ namespace DesktopApp
 
         private async void LoadCentralGroupPanel(int groupId)
         {
-            //CentralFlowLayoutPanel.Controls.Clear();
             ClearFlowLayoutPanel(CentralFlowLayoutPanel);
 
             group = await dataSourceProvider.GetGroupById(groupId);
@@ -386,7 +378,6 @@ namespace DesktopApp
 
         private async void LoadCentralPromotionPanel(int promotionId)
         {
-            //CentralFlowLayoutPanel.Controls.Clear();
             ClearFlowLayoutPanel(CentralFlowLayoutPanel);
 
             promotion = await dataSourceProvider.GetPromotionById(promotionId);
