@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             nameLBL = new Label();
-            nameField = new TextBox();
-            SubmitCreateGroup = new Button();
+            NameField = new TextBox();
+            CreateGroupBtn = new Button();
             SuspendLayout();
             // 
             // nameLBL
@@ -42,31 +42,31 @@
             nameLBL.TabIndex = 0;
             nameLBL.Text = "Nom du nouveau groupe";
             // 
-            // nameField
+            // NameField
             // 
-            nameField.Location = new Point(316, 146);
-            nameField.Name = "nameField";
-            nameField.Size = new Size(141, 23);
-            nameField.TabIndex = 1;
-            nameField.TextChanged += nameField_TextChanged;
+            NameField.Location = new Point(316, 146);
+            NameField.Name = "NameField";
+            NameField.Size = new Size(141, 23);
+            NameField.TabIndex = 1;
+            NameField.TextChanged += NameField_TextChanged;
             // 
-            // SubmitCreateGroup
+            // CreateGroupBtn
             // 
-            SubmitCreateGroup.Location = new Point(316, 246);
-            SubmitCreateGroup.Name = "SubmitCreateGroup";
-            SubmitCreateGroup.Size = new Size(141, 23);
-            SubmitCreateGroup.TabIndex = 2;
-            SubmitCreateGroup.Text = "Créer";
-            SubmitCreateGroup.UseVisualStyleBackColor = true;
-            SubmitCreateGroup.Click += SubmitCreateGroup_Click;
+            CreateGroupBtn.Location = new Point(316, 246);
+            CreateGroupBtn.Name = "CreateGroupBtn";
+            CreateGroupBtn.Size = new Size(141, 23);
+            CreateGroupBtn.TabIndex = 2;
+            CreateGroupBtn.Text = "Créer";
+            CreateGroupBtn.UseVisualStyleBackColor = true;
+            CreateGroupBtn.Click += CreateGroupBtn_Click;
             // 
             // CreateGroupForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(SubmitCreateGroup);
-            Controls.Add(nameField);
+            Controls.Add(CreateGroupBtn);
+            Controls.Add(NameField);
             Controls.Add(nameLBL);
             Name = "CreateGroupForm";
             Text = "Création d'un Groupe";
@@ -77,7 +77,7 @@
         #endregion
 
         private Label nameLBL;
-        private TextBox nameField;
-        private Button SubmitCreateGroup;
+        private TextBox NameField;
+        private Button CreateGroupBtn;
     }
 }

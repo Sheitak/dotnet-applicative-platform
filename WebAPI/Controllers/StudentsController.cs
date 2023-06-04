@@ -343,7 +343,7 @@ namespace WebAPI.Controllers
             student.Group = targetStudentGroup;
 
             // UPDATE PROMOTION
-            var targetStudentPromotion = await _context.Promotions.FindAsync(studentDTO.PromotionID);
+            var targetStudentPromotion = await _context.Promotions.FindAsync(studentDTO.Promotion.PromotionID);
 
             if (targetStudentPromotion == null)
             {
@@ -438,7 +438,7 @@ namespace WebAPI.Controllers
         }
         // </snippet_Create>
 
-        // DELETE: api/Student/5
+        // DELETE: api/Students/5
         /// <summary>
         /// Delete a Student.
         /// </summary>
@@ -446,7 +446,7 @@ namespace WebAPI.Controllers
         /// <returns></returns>
         /// <response code="201">Student correctly deleted</response>
         /// <response code="400">If the student is null</response>
-        [Authorize]
+        //[Authorize]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

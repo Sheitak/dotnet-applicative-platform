@@ -205,7 +205,17 @@ namespace WebAPI.Controllers
         }
 
         // DELETE: api/Groups/5
+        /// <summary>
+        /// Delete a Group.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <response code="201">Group correctly deleted</response>
+        /// <response code="400">If the group is null</response>
+        //[Authorize]
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DeleteGroup(int id)
         {
             if (_context.Groups == null)

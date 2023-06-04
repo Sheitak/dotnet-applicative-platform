@@ -1,33 +1,37 @@
 ﻿using DesktopApp.Models;
 using DesktopApp.Services;
+using static DesktopApp.FormInterface;
 
 namespace DesktopApp.Forms
 {
     public partial class CreateStudentForm : Form
     {
+        private readonly LoadEntitiesDelegate loadEntitiesDelegate;
         readonly DataSourceProvider dataSourceProvider = DataSourceProvider.GetInstance();
         readonly Student student = new();
 
-        public CreateStudentForm()
+        public CreateStudentForm(LoadEntitiesDelegate loadEntitiesDelegate)
         {
             InitializeComponent();
             InitializeComboBox();
             CenterToScreen();
+            this.loadEntitiesDelegate = loadEntitiesDelegate;
         }
 
         private async void InitializeComboBox()
         {
-            comboBoxGroup.DataSource = await dataSourceProvider.GetGroups();
-            comboBoxPromotion.DataSource = await dataSourceProvider.GetPromotions();
+            ComboBoxGroup.DataSource = await dataSourceProvider.GetGroups();
+            ComboBoxPromotion.DataSource = await dataSourceProvider.GetPromotions();
         }
 
-        private async void submitCreateStudent_Click(object sender, EventArgs e)
+        private async void CreateStudentBtn_Click(object sender, EventArgs e)
         {
             try
             {
                 await dataSourceProvider.CreateStudent(student);
                 MessageBox.Show("L'étudiant " + student.Firstname + " " + student.Lastname + " a été créé avec succès !");
-                Hide();
+                loadEntitiesDelegate.Invoke();
+                Close();
             }
             catch (Exception ex)
             {
@@ -35,31 +39,25 @@ namespace DesktopApp.Forms
             }
         }
 
-        private void firstnameField_TextChanged(object sender, EventArgs e)
+        private void FirstnameField_TextChanged(object sender, EventArgs e)
         {
-            TextBox textBox = sender as TextBox;
-
-            if (textBox != null)
+            if (sender is TextBox textBox)
             {
                 student.Firstname = textBox.Text;
             }
         }
 
-        private void lastnameField_TextChanged(object sender, EventArgs e)
+        private void LastnameField_TextChanged(object sender, EventArgs e)
         {
-            TextBox textBox = sender as TextBox;
-
-            if (textBox != null)
+            if (sender is TextBox textBox)
             {
                 student.Lastname = textBox.Text;
             }
         }
 
-        private void comboBoxGroup_SelectedValueChanged(object sender, EventArgs e)
+        private void ComboBoxGroup_SelectedValueChanged(object sender, EventArgs e)
         {
-            ComboBox comboBox = sender as ComboBox;
-
-            if (comboBox != null)
+            if (sender is ComboBox comboBox)
             {
                 student.GroupID = (int)comboBox.SelectedValue;
                 student.Group = new Group
@@ -70,11 +68,9 @@ namespace DesktopApp.Forms
             }
         }
 
-        private void comboBoxPromotion_SelectedValueChanged(object sender, EventArgs e)
+        private void ComboBoxPromotion_SelectedValueChanged(object sender, EventArgs e)
         {
-            ComboBox comboBox = sender as ComboBox;
-
-            if (comboBox != null)
+            if (sender is ComboBox comboBox)
             {
                 student.PromotionID = (int)comboBox.SelectedValue;
                 student.Promotion = new Promotion

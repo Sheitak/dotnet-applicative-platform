@@ -28,56 +28,56 @@
         /// </summary>
         private void InitializeComponent()
         {
-            firstnameField = new TextBox();
-            lastnameField = new TextBox();
-            comboBoxGroup = new ComboBox();
-            comboBoxPromotion = new ComboBox();
+            FirstnameField = new TextBox();
+            LastnameField = new TextBox();
+            ComboBoxGroup = new ComboBox();
+            ComboBoxPromotion = new ComboBox();
             firstnameLBL = new Label();
             lastnameLBL = new Label();
             promotionLBL = new Label();
             groupLBL = new Label();
-            submitCreateStudent = new Button();
+            CreateStudentBtn = new Button();
             SuspendLayout();
             // 
-            // firstnameField
+            // FirstnameField
             // 
-            firstnameField.Location = new Point(195, 125);
-            firstnameField.Name = "firstnameField";
-            firstnameField.Size = new Size(156, 23);
-            firstnameField.TabIndex = 1;
-            firstnameField.TextChanged += firstnameField_TextChanged;
+            FirstnameField.Location = new Point(195, 125);
+            FirstnameField.Name = "FirstnameField";
+            FirstnameField.Size = new Size(156, 23);
+            FirstnameField.TabIndex = 1;
+            FirstnameField.TextChanged += FirstnameField_TextChanged;
             // 
-            // lastnameField
+            // LastnameField
             // 
-            lastnameField.Location = new Point(396, 125);
-            lastnameField.Name = "lastnameField";
-            lastnameField.Size = new Size(156, 23);
-            lastnameField.TabIndex = 2;
-            lastnameField.TextChanged += lastnameField_TextChanged;
+            LastnameField.Location = new Point(396, 125);
+            LastnameField.Name = "LastnameField";
+            LastnameField.Size = new Size(156, 23);
+            LastnameField.TabIndex = 2;
+            LastnameField.TextChanged += LastnameField_TextChanged;
             // 
-            // comboBoxGroup
+            // ComboBoxGroup
             // 
-            comboBoxGroup.DisplayMember = "Name";
-            comboBoxGroup.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboBoxGroup.FormattingEnabled = true;
-            comboBoxGroup.Location = new Point(195, 210);
-            comboBoxGroup.Name = "comboBoxGroup";
-            comboBoxGroup.Size = new Size(156, 23);
-            comboBoxGroup.TabIndex = 4;
-            comboBoxGroup.ValueMember = "GroupID";
-            comboBoxGroup.SelectedValueChanged += comboBoxGroup_SelectedValueChanged;
+            ComboBoxGroup.DisplayMember = "Name";
+            ComboBoxGroup.DropDownStyle = ComboBoxStyle.DropDownList;
+            ComboBoxGroup.FormattingEnabled = true;
+            ComboBoxGroup.Location = new Point(195, 210);
+            ComboBoxGroup.Name = "ComboBoxGroup";
+            ComboBoxGroup.Size = new Size(156, 23);
+            ComboBoxGroup.TabIndex = 4;
+            ComboBoxGroup.ValueMember = "GroupID";
+            ComboBoxGroup.SelectedValueChanged += ComboBoxGroup_SelectedValueChanged;
             // 
-            // comboBoxPromotion
+            // ComboBoxPromotion
             // 
-            comboBoxPromotion.DisplayMember = "Name";
-            comboBoxPromotion.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboBoxPromotion.FormattingEnabled = true;
-            comboBoxPromotion.Location = new Point(396, 210);
-            comboBoxPromotion.Name = "comboBoxPromotion";
-            comboBoxPromotion.Size = new Size(156, 23);
-            comboBoxPromotion.TabIndex = 5;
-            comboBoxPromotion.ValueMember = "PromotionID";
-            comboBoxPromotion.SelectedValueChanged += comboBoxPromotion_SelectedValueChanged;
+            ComboBoxPromotion.DisplayMember = "Name";
+            ComboBoxPromotion.DropDownStyle = ComboBoxStyle.DropDownList;
+            ComboBoxPromotion.FormattingEnabled = true;
+            ComboBoxPromotion.Location = new Point(396, 210);
+            ComboBoxPromotion.Name = "ComboBoxPromotion";
+            ComboBoxPromotion.Size = new Size(156, 23);
+            ComboBoxPromotion.TabIndex = 5;
+            ComboBoxPromotion.ValueMember = "PromotionID";
+            ComboBoxPromotion.SelectedValueChanged += ComboBoxPromotion_SelectedValueChanged;
             // 
             // firstnameLBL
             // 
@@ -115,30 +115,30 @@
             groupLBL.TabIndex = 9;
             groupLBL.Text = "Groupe";
             // 
-            // submitCreateStudent
+            // CreateStudentBtn
             // 
-            submitCreateStudent.Location = new Point(304, 283);
-            submitCreateStudent.Name = "submitCreateStudent";
-            submitCreateStudent.Size = new Size(156, 23);
-            submitCreateStudent.TabIndex = 10;
-            submitCreateStudent.Text = "Créer";
-            submitCreateStudent.UseVisualStyleBackColor = true;
-            submitCreateStudent.Click += submitCreateStudent_Click;
+            CreateStudentBtn.Location = new Point(304, 283);
+            CreateStudentBtn.Name = "CreateStudentBtn";
+            CreateStudentBtn.Size = new Size(156, 23);
+            CreateStudentBtn.TabIndex = 10;
+            CreateStudentBtn.Text = "Créer";
+            CreateStudentBtn.UseVisualStyleBackColor = true;
+            CreateStudentBtn.Click += CreateStudentBtn_Click;
             // 
             // CreateStudentForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(submitCreateStudent);
+            Controls.Add(CreateStudentBtn);
             Controls.Add(groupLBL);
             Controls.Add(promotionLBL);
             Controls.Add(lastnameLBL);
             Controls.Add(firstnameLBL);
-            Controls.Add(comboBoxPromotion);
-            Controls.Add(comboBoxGroup);
-            Controls.Add(lastnameField);
-            Controls.Add(firstnameField);
+            Controls.Add(ComboBoxPromotion);
+            Controls.Add(ComboBoxGroup);
+            Controls.Add(LastnameField);
+            Controls.Add(FirstnameField);
             Name = "CreateStudentForm";
             Text = "Création d'un Etudiant";
             ResumeLayout(false);
@@ -147,14 +147,14 @@
 
         #endregion
 
-        private TextBox firstnameField;
-        private TextBox lastnameField;
-        private ComboBox comboBoxGroup;
-        private ComboBox comboBoxPromotion;
+        private TextBox FirstnameField;
+        private TextBox LastnameField;
+        private ComboBox ComboBoxGroup;
+        private ComboBox ComboBoxPromotion;
         private Label firstnameLBL;
         private Label lastnameLBL;
         private Label promotionLBL;
         private Label groupLBL;
-        private Button submitCreateStudent;
+        private Button CreateStudentBtn;
     }
 }

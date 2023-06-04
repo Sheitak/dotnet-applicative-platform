@@ -1,26 +1,30 @@
 ﻿using DesktopApp.Models;
 using DesktopApp.Services;
+using static DesktopApp.FormInterface;
 
 namespace DesktopApp.Forms
 {
     public partial class CreatePromotionForm : Form
     {
+        private readonly LoadEntitiesDelegate loadEntitiesDelegate;
         readonly DataSourceProvider dataSourceProvider = DataSourceProvider.GetInstance();
         readonly Promotion promotion = new();
 
-        public CreatePromotionForm()
+        public CreatePromotionForm(LoadEntitiesDelegate loadEntitiesDelegate)
         {
             InitializeComponent();
             CenterToScreen();
+            this.loadEntitiesDelegate = loadEntitiesDelegate;
         }
 
-        private async void SubmitCreatePromotion_Click(object sender, EventArgs e)
+        private async void CreatePromotionBtn_Click(object sender, EventArgs e)
         {
             try
             {
                 await dataSourceProvider.CreatePromotion(promotion);
                 MessageBox.Show("La promotion " + promotion.Name + " a été créé avec succès !");
-                Hide();
+                loadEntitiesDelegate.Invoke();
+                Close();
             }
             catch (Exception ex)
             {
@@ -28,11 +32,9 @@ namespace DesktopApp.Forms
             }
         }
 
-        private void nameField_TextChanged(object sender, EventArgs e)
+        private void NameField_TextChanged(object sender, EventArgs e)
         {
-            TextBox textBox = sender as TextBox;
-
-            if (textBox != null)
+            if (sender is TextBox textBox)
             {
                 promotion.Name = textBox.Text;
             }

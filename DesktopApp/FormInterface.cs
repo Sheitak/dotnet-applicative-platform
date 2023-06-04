@@ -17,6 +17,8 @@ namespace DesktopApp
             CenterToScreen();
         }
 
+        public delegate void LoadEntitiesDelegate();
+
         private async void LoadStudents_Click(object sender, EventArgs e)
         {
             ClearFlowLayoutPanel(CentralFlowLayoutPanel);
@@ -25,11 +27,13 @@ namespace DesktopApp
             var studentList = await dataSourceProvider.GetStudents();
 
             // PANEL GAUCHE
-            ListView studentListView = new ListView();
-            studentListView.Name = "StudentListView";
-            studentListView.Bounds = new Rectangle(new Point(10, 10), new Size(125, 400));
+            ListView studentListView = new ListView()
+            {
+                Name = "StudentListView",
+                Bounds = new Rectangle(new Point(10, 10), new Size(125, 400)),
 
-            studentListView.View = View.Details;
+                View = View.Details
+            };
             studentListView.SelectedIndexChanged += ListView_SelectedIndexChanged;
 
             studentListView.Columns.Add("Elèves", -2, HorizontalAlignment.Left);
@@ -40,8 +44,10 @@ namespace DesktopApp
 
             foreach (Student student in studentList)
             {
-                ListViewItem item = new ListViewItem(student.Firstname + ' ' + student.Lastname);
-                item.Tag = student.StudentID;
+                ListViewItem item = new ListViewItem(student.Firstname + ' ' + student.Lastname)
+                {
+                    Tag = student.StudentID
+                };
                 studentListView.Items.Add(item);
             }
 
@@ -59,11 +65,13 @@ namespace DesktopApp
             var groupList = await dataSourceProvider.GetGroups();
 
             // PANEL GAUCHE
-            ListView groupListView = new ListView();
-            groupListView.Name = "GroupListView";
-            groupListView.Bounds = new Rectangle(new Point(10, 10), new Size(125, 400));
+            ListView groupListView = new ListView
+            {
+                Name = "GroupListView",
+                Bounds = new Rectangle(new Point(10, 10), new Size(125, 400)),
 
-            groupListView.View = View.Details;
+                View = View.Details
+            };
             groupListView.SelectedIndexChanged += ListView_SelectedIndexChanged;
 
             groupListView.Columns.Add("Groupes", -2, HorizontalAlignment.Left);
@@ -74,8 +82,10 @@ namespace DesktopApp
 
             foreach (Group group in groupList)
             {
-                ListViewItem item = new ListViewItem(group.Name);
-                item.Tag = group.GroupID;
+                ListViewItem item = new ListViewItem(group.Name)
+                {
+                    Tag = group.GroupID
+                };
                 groupListView.Items.Add(item);
             }
 
@@ -93,11 +103,13 @@ namespace DesktopApp
             var promotionList = await dataSourceProvider.GetPromotions();
 
             // PANEL GAUCHE
-            ListView promotionListView = new ListView();
-            promotionListView.Name = "PromotionListView";
-            promotionListView.Bounds = new Rectangle(new Point(10, 10), new Size(125, 400));
+            ListView promotionListView = new ListView
+            {
+                Name = "PromotionListView",
+                Bounds = new Rectangle(new Point(10, 10), new Size(125, 400)),
 
-            promotionListView.View = View.Details;
+                View = View.Details
+            };
             promotionListView.SelectedIndexChanged += ListView_SelectedIndexChanged;
 
             promotionListView.Columns.Add("Promotions", -2, HorizontalAlignment.Left);
@@ -108,8 +120,10 @@ namespace DesktopApp
 
             foreach (Promotion promotion in promotionList)
             {
-                ListViewItem item = new ListViewItem(promotion.Name);
-                item.Tag = promotion.PromotionID;
+                ListViewItem item = new ListViewItem(promotion.Name)
+                {
+                    Tag = promotion.PromotionID
+                };
                 promotionListView.Items.Add(item);
             }
 
@@ -119,7 +133,7 @@ namespace DesktopApp
             ListFlowLayoutPanel.Controls.Add(promotionListView);
         }
 
-        private void TextField_Changed(object sender, EventArgs e)
+        private void TextField_Changed(object? sender, EventArgs e)
         {
             TextBox textBox = sender as TextBox;
             switch (textBox.Name)
@@ -139,7 +153,7 @@ namespace DesktopApp
             }
         }
 
-        private void ComboBoxField_Changed(object sender, EventArgs e)
+        private void ComboBoxField_Changed(object? sender, EventArgs e)
         {
             ComboBox comboBox = sender as ComboBox;
 
@@ -164,24 +178,29 @@ namespace DesktopApp
             }
         }
 
-        private async void submitBtn_Click(object sender, EventArgs e)
+        private async void EditBtn_Click(object? sender, EventArgs e)
         {
-            Button btnSubmit = sender as Button;
+            Button btnEdit = sender as Button;
             try
             {
-                switch (btnSubmit.Name)
+                switch (btnEdit.Name)
                 {
-                    case "submitEditStudentButton":
+                    case "editStudentButton":
                         await dataSourceProvider.UpdateStudent(student);
                         MessageBox.Show("L'étudiant " + student.Firstname + " " + student.Lastname + " a été modifié avec succès !");
+                        LoadStudents_Click(sender, e);
                         break;
-                    case "submitEditGroupButton":
+                    case "editGroupButton":
                         await dataSourceProvider.UpdateGroup(group);
                         MessageBox.Show("Le groupe " + group.Name + " a été modifié avec succès !");
+                        LoadGroups_Click(sender, e);
                         break;
-                    case "submitEditPromotionButton":
+                    case "editPromotionButton":
                         await dataSourceProvider.UpdatePromotion(promotion);
                         MessageBox.Show("La promotion " + promotion.Name + " a été modifiée avec succès !");
+                        LoadPromotions_Click(sender, e);
+                        break;
+                    default:
                         break;
                 }
             }
@@ -191,7 +210,39 @@ namespace DesktopApp
             }
         }
 
-        private void ListView_SelectedIndexChanged(object sender, EventArgs e)
+        private async void DeleteBtn_Click(object? sender, EventArgs e)
+        {
+            Button btnDelete = sender as Button;
+            try
+            {
+                switch (btnDelete.Name)
+                {
+                    case "deleteStudentButton":
+                        await dataSourceProvider.DeleteStudent(student.StudentID);
+                        MessageBox.Show("L'étudiant " + student.Firstname + " " + student.Lastname + " a été supprimé avec succès !");
+                        LoadStudents_Click(sender, e);
+                        break;
+                    case "deleteGroupButton":
+                        await dataSourceProvider.DeleteGroup(group.GroupID);
+                        MessageBox.Show("Le groupe " + group.Name + " a été supprimé avec succès !");
+                        LoadGroups_Click(sender, e);
+                        break;
+                    case "deletePromotionButton":
+                        await dataSourceProvider.DeletePromotion(promotion.PromotionID);
+                        MessageBox.Show("La promotion " + promotion.Name + " a été supprimé avec succès !");
+                        LoadPromotions_Click(sender, e);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void ListView_SelectedIndexChanged(object? sender, EventArgs e)
         {
             ListView listView = (ListView)sender;
 
@@ -219,7 +270,11 @@ namespace DesktopApp
 
             student = await dataSourceProvider.GetStudentById(studentId);
 
+            TableLayoutPanel tableLayoutPanel = new TableLayoutPanel();
+            tableLayoutPanel.ColumnCount = 2;
+
             // ID
+            /*
             Label studentIDLabel = new Label();
             TextBox studentIDField = new TextBox();
 
@@ -227,10 +282,10 @@ namespace DesktopApp
             studentIDLabel.Name = "IDField";
             studentIDField.Text = student.StudentID.ToString();
 
-            CentralFlowLayoutPanel.FlowDirection = FlowDirection.LeftToRight;
-
-            CentralFlowLayoutPanel.Controls.Add(studentIDLabel);
-            CentralFlowLayoutPanel.Controls.Add(studentIDField);
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            tableLayoutPanel.Controls.Add(studentIDLabel, 0, 0);
+            tableLayoutPanel.Controls.Add(studentIDField, 1, 0);
+            */
 
             // FIRSTNAME
             Label studentFirstnameLabel = new Label();
@@ -241,10 +296,12 @@ namespace DesktopApp
             studentFirstnameField.Text = student.Firstname.ToString();
             studentFirstnameField.TextChanged += new EventHandler(TextField_Changed);
 
-            CentralFlowLayoutPanel.FlowDirection = FlowDirection.LeftToRight;
+            studentFirstnameLabel.Margin = new Padding(0, 15, 0, 0);
+            studentFirstnameField.Margin = new Padding(0, 15, 0, 0);
 
-            CentralFlowLayoutPanel.Controls.Add(studentFirstnameLabel);
-            CentralFlowLayoutPanel.Controls.Add(studentFirstnameField);
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            tableLayoutPanel.Controls.Add(studentFirstnameLabel, 0, 0);
+            tableLayoutPanel.Controls.Add(studentFirstnameField, 1, 0);
 
             // LASTNAME
             Label studentLastnameLabel = new Label();
@@ -255,13 +312,14 @@ namespace DesktopApp
             studentLastnameField.Text = student.Lastname.ToString();
             studentLastnameField.TextChanged += new EventHandler(TextField_Changed);
 
-            CentralFlowLayoutPanel.FlowDirection = FlowDirection.LeftToRight;
+            studentLastnameLabel.Margin = new Padding(0, 15, 0, 0);
+            studentLastnameField.Margin = new Padding(0, 15, 0, 0);
 
-            CentralFlowLayoutPanel.Controls.Add(studentLastnameLabel);
-            CentralFlowLayoutPanel.Controls.Add(studentLastnameField);
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            tableLayoutPanel.Controls.Add(studentLastnameLabel, 0, 1);
+            tableLayoutPanel.Controls.Add(studentLastnameField, 1, 1);
 
             // GROUP
-            // https://stackoverflow.com/questions/27723668/how-to-create-a-drop-down-menu-in-winforms-and-c-sharp
             Label groupListLabel = new Label();
             groupListLabel.Text = "Groupe : ";
 
@@ -276,20 +334,23 @@ namespace DesktopApp
             groups.Insert(0, new Group { GroupID = student.Group.GroupID, Name = student.Group.Name });
             groupList.DataSource = groups;
 
-            // Détermine la valeur par défaut sélectionnée
             if (student.Group != null)
             {
                 groupList.SelectedValue = student.Group.GroupID;
             }
             else
             {
-                groupList.SelectedValue = null; // ComboBox vide
+                groupList.SelectedValue = null;
             }
 
             groupList.SelectedValueChanged += new EventHandler(ComboBoxField_Changed);
 
-            CentralFlowLayoutPanel.Controls.Add(groupListLabel);
-            CentralFlowLayoutPanel.Controls.Add(groupList);
+            groupListLabel.Margin = new Padding(0, 15, 0, 0);
+            groupList.Margin = new Padding(0, 15, 0, 0);
+
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            tableLayoutPanel.Controls.Add(groupListLabel, 0, 2);
+            tableLayoutPanel.Controls.Add(groupList, 1, 2);
 
             // PROMOTION
             Label promotionListLabel = new Label();
@@ -306,28 +367,49 @@ namespace DesktopApp
             promotions.Insert(0, new Promotion { PromotionID = student.Promotion.PromotionID, Name = student.Promotion.Name });
             promotionList.DataSource = promotions;
 
-            // Détermine la valeur par défaut sélectionnée
             if (student.Group != null)
             {
                 promotionList.SelectedValue = student.Promotion.PromotionID;
             }
             else
             {
-                promotionList.SelectedValue = null; // ComboBox vide
+                promotionList.SelectedValue = null;
             }
 
             promotionList.SelectedValueChanged += new EventHandler(ComboBoxField_Changed);
 
-            CentralFlowLayoutPanel.Controls.Add(promotionListLabel);
-            CentralFlowLayoutPanel.Controls.Add(promotionList);
+            promotionListLabel.Margin = new Padding(0, 15, 0, 0);
+            promotionList.Margin = new Padding(0, 15, 0, 0);
 
-            // SUBMIT
-            Button submitBtn = new Button();
-            submitBtn.Name = "submitEditStudentButton";
-            submitBtn.Text = "Modifier";
-            submitBtn.Click += new EventHandler(submitBtn_Click);
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            tableLayoutPanel.Controls.Add(promotionListLabel, 0, 3);
+            tableLayoutPanel.Controls.Add(promotionList, 1, 3);
 
-            CentralFlowLayoutPanel.Controls.Add(submitBtn);
+            // EDIT
+            Button editBtn = new Button();
+            editBtn.Name = "editStudentButton";
+            editBtn.Text = "Modifier";
+            editBtn.BackColor = Color.DarkSeaGreen;
+            editBtn.Click += new EventHandler(EditBtn_Click);
+
+            // DELETE
+            Button deleteBtn = new Button();
+            deleteBtn.Name = "deleteStudentButton";
+            deleteBtn.Text = "Supprimer";
+            deleteBtn.BackColor = Color.IndianRed;
+            deleteBtn.Click += new EventHandler(DeleteBtn_Click);
+
+            editBtn.Margin = new Padding(0, 15, 0, 0);
+            deleteBtn.Margin = new Padding(0, 15, 0, 0);
+
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            tableLayoutPanel.Controls.Add(editBtn, 0, 4);
+            tableLayoutPanel.Controls.Add(deleteBtn, 1, 4);
+
+            CentralFlowLayoutPanel.Controls.Add(tableLayoutPanel);
+
+            tableLayoutPanel.Dock = DockStyle.Fill;
+            tableLayoutPanel.AutoSize = true;
 
             CentralFlowLayoutPanel.FlowDirection = FlowDirection.TopDown;
         }
@@ -338,7 +420,11 @@ namespace DesktopApp
 
             group = await dataSourceProvider.GetGroupById(groupId);
 
+            TableLayoutPanel tableLayoutPanel = new TableLayoutPanel();
+            tableLayoutPanel.ColumnCount = 2;
+
             // ID
+            /*
             Label groupIDLabel = new Label();
             TextBox groupIDField = new TextBox();
 
@@ -346,10 +432,10 @@ namespace DesktopApp
             groupIDLabel.Name = "groupIDField";
             groupIDField.Text = group.GroupID.ToString();
 
-            CentralFlowLayoutPanel.FlowDirection = FlowDirection.LeftToRight;
-
-            CentralFlowLayoutPanel.Controls.Add(groupIDLabel);
-            CentralFlowLayoutPanel.Controls.Add(groupIDField);
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            tableLayoutPanel.Controls.Add(groupIDLabel, 0, 0);
+            tableLayoutPanel.Controls.Add(groupIDField, 1, 0);
+            */
 
             // NAME
             Label groupNameLabel = new Label();
@@ -360,18 +446,38 @@ namespace DesktopApp
             groupNameField.Text = group.Name.ToString();
             groupNameField.TextChanged += new EventHandler(TextField_Changed);
 
-            CentralFlowLayoutPanel.FlowDirection = FlowDirection.LeftToRight;
+            groupNameLabel.Margin = new Padding(0, 15, 0, 0);
+            groupNameField.Margin = new Padding(0, 15, 0, 0);
 
-            CentralFlowLayoutPanel.Controls.Add(groupNameLabel);
-            CentralFlowLayoutPanel.Controls.Add(groupNameField);
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            tableLayoutPanel.Controls.Add(groupNameLabel, 0, 0);
+            tableLayoutPanel.Controls.Add(groupNameField, 1, 0);
 
-            // SUBMIT
-            Button submitBtn = new Button();
-            submitBtn.Name = "submitEditGroupButton";
-            submitBtn.Text = "Modifier";
-            submitBtn.Click += new EventHandler(submitBtn_Click);
+            // EDIT
+            Button editBtn = new Button();
+            editBtn.Name = "editGroupButton";
+            editBtn.Text = "Modifier";
+            editBtn.BackColor = Color.DarkSeaGreen;
+            editBtn.Click += new EventHandler(EditBtn_Click);
 
-            CentralFlowLayoutPanel.Controls.Add(submitBtn);
+            // DELETE
+            Button deleteBtn = new Button();
+            deleteBtn.Name = "deleteGroupButton";
+            deleteBtn.Text = "Supprimer";
+            deleteBtn.BackColor = Color.IndianRed;
+            deleteBtn.Click += new EventHandler(DeleteBtn_Click);
+
+            editBtn.Margin = new Padding(0, 15, 0, 0);
+            deleteBtn.Margin = new Padding(0, 15, 0, 0);
+
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            tableLayoutPanel.Controls.Add(editBtn, 0, 1);
+            tableLayoutPanel.Controls.Add(deleteBtn, 1, 1);
+
+            CentralFlowLayoutPanel.Controls.Add(tableLayoutPanel);
+
+            tableLayoutPanel.Dock = DockStyle.Fill;
+            tableLayoutPanel.AutoSize = true;
 
             CentralFlowLayoutPanel.FlowDirection = FlowDirection.TopDown;
         }
@@ -382,7 +488,11 @@ namespace DesktopApp
 
             promotion = await dataSourceProvider.GetPromotionById(promotionId);
 
+            TableLayoutPanel tableLayoutPanel = new TableLayoutPanel();
+            tableLayoutPanel.ColumnCount = 2;
+
             // ID
+            /*
             Label promotionIDLabel = new Label();
             TextBox promotionIDField = new TextBox();
 
@@ -390,10 +500,10 @@ namespace DesktopApp
             promotionIDLabel.Name = "promotionIDField";
             promotionIDField.Text = promotion.PromotionID.ToString();
 
-            CentralFlowLayoutPanel.FlowDirection = FlowDirection.LeftToRight;
-
-            CentralFlowLayoutPanel.Controls.Add(promotionIDLabel);
-            CentralFlowLayoutPanel.Controls.Add(promotionIDField);
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            tableLayoutPanel.Controls.Add(promotionIDLabel, 0, 0);
+            tableLayoutPanel.Controls.Add(promotionIDField, 1, 0);
+            */
 
             // NAME
             Label promotionNameLabel = new Label();
@@ -404,18 +514,38 @@ namespace DesktopApp
             promotionNameField.Text = promotion.Name.ToString();
             promotionNameField.TextChanged += new EventHandler(TextField_Changed);
 
-            CentralFlowLayoutPanel.FlowDirection = FlowDirection.LeftToRight;
+            promotionNameLabel.Margin = new Padding(0, 15, 0, 0);
+            promotionNameField.Margin = new Padding(0, 15, 0, 0);
 
-            CentralFlowLayoutPanel.Controls.Add(promotionNameLabel);
-            CentralFlowLayoutPanel.Controls.Add(promotionNameField);
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            tableLayoutPanel.Controls.Add(promotionNameLabel, 0, 0);
+            tableLayoutPanel.Controls.Add(promotionNameField, 1, 0);
 
-            // SUBMIT
-            Button submitBtn = new Button();
-            submitBtn.Name = "submitEditPromotionButton";
-            submitBtn.Text = "Modifier";
-            submitBtn.Click += new EventHandler(submitBtn_Click);
+            // EDIT
+            Button editBtn = new Button();
+            editBtn.Name = "editPromotionButton";
+            editBtn.Text = "Modifier";
+            editBtn.BackColor = Color.DarkSeaGreen;
+            editBtn.Click += new EventHandler(EditBtn_Click);
 
-            CentralFlowLayoutPanel.Controls.Add(submitBtn);
+            // DELETE
+            Button deleteBtn = new Button();
+            deleteBtn.Name = "deletePromotionButton";
+            deleteBtn.Text = "Supprimer";
+            deleteBtn.BackColor = Color.IndianRed;
+            deleteBtn.Click += new EventHandler(DeleteBtn_Click);
+
+            editBtn.Margin = new Padding(0, 15, 0, 0);
+            deleteBtn.Margin = new Padding(0, 15, 0, 0);
+
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            tableLayoutPanel.Controls.Add(editBtn, 0, 1);
+            tableLayoutPanel.Controls.Add(deleteBtn, 1, 1);
+
+            CentralFlowLayoutPanel.Controls.Add(tableLayoutPanel);
+
+            tableLayoutPanel.Dock = DockStyle.Fill;
+            tableLayoutPanel.AutoSize = true;
 
             CentralFlowLayoutPanel.FlowDirection = FlowDirection.TopDown;
         }
@@ -431,18 +561,19 @@ namespace DesktopApp
 
         private void CreateStudent_Click(object sender, EventArgs e)
         {
-            var createStudentForm = new CreateStudentForm();
+            var createStudentForm = new CreateStudentForm(ReloadStudents);
             createStudentForm.Show();
         }
+
         private void CreateGroup_Click(object sender, EventArgs e)
         {
-            var createGroupForm = new CreateGroupForm();
+            var createGroupForm = new CreateGroupForm(ReloadGroups);
             createGroupForm.Show();
         }
 
         private void CreatePromotion_Click(object sender, EventArgs e)
         {
-            var createPromotionForm = new CreatePromotionForm();
+            var createPromotionForm = new CreatePromotionForm(ReloadPromotions);
             createPromotionForm.Show();
         }
 
@@ -462,6 +593,21 @@ namespace DesktopApp
         {
             var importPromotionsForm = new ImportPromotionsForm();
             importPromotionsForm.Show();
+        }
+
+        private void ReloadStudents()
+        {
+            LoadStudents_Click(this, EventArgs.Empty);
+        }
+
+        private void ReloadGroups()
+        {
+            LoadGroups_Click(this, EventArgs.Empty);
+        }
+
+        private void ReloadPromotions()
+        {
+            LoadPromotions_Click(this, EventArgs.Empty);
         }
     }
 }

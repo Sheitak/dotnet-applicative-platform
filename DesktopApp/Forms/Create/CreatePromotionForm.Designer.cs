@@ -28,28 +28,28 @@
         /// </summary>
         private void InitializeComponent()
         {
-            SubmitCreatePromotion = new Button();
-            nameField = new TextBox();
+            CreatePromotionBtn = new Button();
+            NameField = new TextBox();
             nameLBL = new Label();
             SuspendLayout();
             // 
-            // SubmitCreatePromotion
+            // CreatePromotionBtn
             // 
-            SubmitCreatePromotion.Location = new Point(310, 256);
-            SubmitCreatePromotion.Name = "SubmitCreatePromotion";
-            SubmitCreatePromotion.Size = new Size(170, 23);
-            SubmitCreatePromotion.TabIndex = 5;
-            SubmitCreatePromotion.Text = "Créer";
-            SubmitCreatePromotion.UseVisualStyleBackColor = true;
-            SubmitCreatePromotion.Click += SubmitCreatePromotion_Click;
+            CreatePromotionBtn.Location = new Point(310, 256);
+            CreatePromotionBtn.Name = "CreatePromotionBtn";
+            CreatePromotionBtn.Size = new Size(170, 23);
+            CreatePromotionBtn.TabIndex = 5;
+            CreatePromotionBtn.Text = "Créer";
+            CreatePromotionBtn.UseVisualStyleBackColor = true;
+            CreatePromotionBtn.Click += CreatePromotionBtn_Click;
             // 
-            // nameField
+            // NameField
             // 
-            nameField.Location = new Point(310, 156);
-            nameField.Name = "nameField";
-            nameField.Size = new Size(170, 23);
-            nameField.TabIndex = 4;
-            nameField.TextChanged += nameField_TextChanged;
+            NameField.Location = new Point(310, 156);
+            NameField.Name = "NameField";
+            NameField.Size = new Size(170, 23);
+            NameField.TabIndex = 4;
+            NameField.TextChanged += NameField_TextChanged;
             // 
             // nameLBL
             // 
@@ -65,8 +65,8 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(SubmitCreatePromotion);
-            Controls.Add(nameField);
+            Controls.Add(CreatePromotionBtn);
+            Controls.Add(NameField);
             Controls.Add(nameLBL);
             Name = "CreatePromotionForm";
             Text = "Création d'une promotion";
@@ -76,8 +76,8 @@
 
         #endregion
 
-        private Button SubmitCreatePromotion;
-        private TextBox nameField;
+        private Button CreatePromotionBtn;
+        private TextBox NameField;
         private Label nameLBL;
     }
 }

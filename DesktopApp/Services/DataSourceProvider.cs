@@ -1,5 +1,6 @@
 ﻿using DesktopApp.Models;
 using Newtonsoft.Json;
+using System.Net.Http.Json;
 
 namespace DesktopApp.Services
 {
@@ -193,6 +194,33 @@ namespace DesktopApp.Services
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadAsAsync<Promotion>();
+        }
+
+        internal async Task<bool> DeleteStudent(int id)
+        {
+            using var client = new HttpClient();
+            HttpResponseMessage response = await client.DeleteAsync($"https://localhost:7058/api/Students/{id}");
+            response.EnsureSuccessStatusCode();
+
+            return response.IsSuccessStatusCode;
+        }
+
+        internal async Task<bool> DeleteGroup(int id)
+        {
+            using var client = new HttpClient();
+            HttpResponseMessage response = await client.DeleteAsync($"https://localhost:7058/api/Groups/{id}");
+            response.EnsureSuccessStatusCode();
+
+            return response.IsSuccessStatusCode;
+        }
+
+        internal async Task<bool> DeletePromotion(int id)
+        {
+            using var client = new HttpClient();
+            HttpResponseMessage response = await client.DeleteAsync($"https://localhost:7058/api/Promotions/{id}");
+            response.EnsureSuccessStatusCode();
+
+            return response.IsSuccessStatusCode;
         }
     }
 }

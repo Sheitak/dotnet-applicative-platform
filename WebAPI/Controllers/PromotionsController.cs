@@ -197,7 +197,16 @@ namespace WebAPI.Controllers
         }
 
         // DELETE: api/Promotions/5
-        [Authorize]
+        /// <summary>
+        /// Delete a Promotion.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <response code="201">Promotion correctly deleted</response>
+        /// <response code="400">If the promotion is null</response>
+        //[Authorize]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePromotion(int id)
         {
