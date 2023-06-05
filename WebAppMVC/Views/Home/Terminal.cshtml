@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "État de la borne";
+    bool terminalStatus = ViewBag.TerminalStatus ?? false;
+}
+
+<p class="font-weight-bold mt-4">
+    État de la borne :
+    @if (terminalStatus)
+    {
+        <div class='alert alert-success text-center w-25' role='alert'>Active</div>
+    }
+    else
+    {
+        <div class='alert alert-danger text-center w-25' role='alert'>Inactive</div>
+    }
+</p>

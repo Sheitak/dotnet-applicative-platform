@@ -108,14 +108,7 @@ $(document).ready(function () {
                 render: function (data, type, row) {
                     return type === "display" || type === "sort" || type === "filter" ? data.group.name : data;
                 }, autoWidth: true
-            } 
-            /*
-            {
-                render: function (data, row) {
-                    return " <a href='#' class='btn btn-info' onclick=EditSignature('" + row.id + "'); >Edit</a> <a href='#' class='btn btn-danger' onclick=DeleteSignature('" + row.id + "'); >Delete</a> ";
-                }, autoWidth: true
-            },
-            */
+            }
         ]
     });
 

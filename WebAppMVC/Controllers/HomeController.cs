@@ -1,19 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using WebAppMVC.Models;
-using WebAppMVC.Repositories;
+using WebAppMVC.Services;
 
 namespace WebAppMVC.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly StudentRepository _studentRepository;
+        private readonly WebCheckClient _webCheckClient = WebCheckClient.GetInstance();
 
-        public HomeController(ILogger<HomeController> logger, StudentRepository studentRepository)
+        public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-            _studentRepository = studentRepository;
         }
 
         public IActionResult Index()
@@ -21,7 +20,14 @@ namespace WebAppMVC.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Terminal()
+        {
+            bool terminalStatus = _webCheckClient.CheckTerminalStatus();
+            ViewBag.TerminalStatus = terminalStatus;
+            return View();
+        }
+
+        public IActionResult About()
         {
             return View();
         }
