@@ -3,14 +3,17 @@
     bool terminalStatus = ViewBag.TerminalStatus ?? false;
 }
 
-<p class="font-weight-bold mt-4">
-    État de la borne :
-    @if (terminalStatus)
-    {
-        <div class='alert alert-success text-center w-25' role='alert'>Active</div>
-    }
-    else
-    {
-        <div class='alert alert-danger text-center w-25' role='alert'>Inactive</div>
-    }
-</p>
+<p class="font-weight-bold mt-4">État de la borne :</p>
+
+@if (terminalStatus)
+{
+    <div class='alert alert-success text-center w-25' role='alert'>Active</div>
+}
+else
+{
+    <div class='alert alert-danger text-center w-25' role='alert'>Inactive</div>
+
+    <p class="font-weight-bold mt-4">Pour vérifier la borne, veuillez contacter l'administrateur :</p>
+
+    <a href="mailto:admin@admin.com" class="btn btn-primary mt-2">Contacter</a>
+}

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 using WebAPI.Data;
 using WebAPI.Models;
 using WebAPI.Models.DTO;
@@ -234,41 +235,58 @@ namespace WebAPI.Controllers
         [HttpGet("GetByIdWithMacAddress/{id}/{macAddress}")]
         public async Task<ActionResult<StudentDTO>> GetStudentByIdWithMacAddress(int id, string macAddress)
         {
-            if (_context.Students == null)
-            {
-                return NotFound();
-            }
-
-            var student = await _context.Students.FirstOrDefaultAsync(s => s.StudentID == id);
+            var student = await _context.Students
+                .Include(s => s.Devices)
+                .FirstOrDefaultAsync(s => s.StudentID == id)
+            ;
 
             if (student == null)
             {
                 return NotFound();
             }
 
-            if (student.MacAdress != macAddress)
-            {
-                return Unauthorized();
-            }
+            var device = student.Devices.FirstOrDefault(d => d.MacAddress == macAddress);
 
-            if (student.MacAdress == macAddress && student.IsActive == true)
+            if (device == null)
             {
-                return new StudentDTO
+                var problemDetails = new ProblemDetails
                 {
-                    StudentID = student.StudentID,
-                    Firstname = student.Firstname,
-                    Lastname = student.Lastname,
-                    IsActive = student.IsActive,
-                    MacAdress = student.MacAdress
+                    Status = (int)HttpStatusCode.Forbidden,
+                    Title = "Appareil introuvable",
+                    Detail = "Cet appareil n'existe pas sur votre compte. Vous n'êtes pas autorisé à émarger. " +
+                    "Souhaitez-vous envoyer une demande d'enregistrement à la vie étudiante ?"
                 };
+
+                return BadRequest(problemDetails);
             }
 
-            if (student.MacAdress == macAddress && student.IsActive == false)
+            if (!device.IsActive)
             {
-                throw new InvalidDataException("Cet appareil n'est pas encore activé pour votre compte");
+                var problemDetails = new ProblemDetails
+                {
+                    Status = (int)HttpStatusCode.Locked,
+                    Title = "Appareil inactif",
+                    Detail = "Cet appareil n'est pas encore activé pour votre compte. " +
+                    "Souhaitez-vous envoyer un email à la vie étudiante pour relancer l'activation ?"
+                };
+
+                return BadRequest(problemDetails);
             }
 
-            return NotFound();
+            var studentDTO = new StudentDTO
+            {
+                StudentID = student.StudentID,
+                Firstname = student.Firstname,
+                Lastname = student.Lastname,
+                Device = new DeviceDTO
+                {
+                    DeviceID = device.DeviceID,
+                    IsActive = device.IsActive,
+                    MacAddress = device.MacAddress
+                }
+            };
+
+            return studentDTO;
         }
         // </snippet_GetByIdWithMacAddress>
 

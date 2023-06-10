@@ -153,6 +153,31 @@ namespace WebAPI.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("WebAPI.Models.Device", b =>
+                {
+                    b.Property<int>("DeviceID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DeviceID"));
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("MacAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StudentID")
+                        .HasColumnType("int");
+
+                    b.HasKey("DeviceID");
+
+                    b.HasIndex("StudentID");
+
+                    b.ToTable("Device", (string)null);
+                });
+
             modelBuilder.Entity("WebAPI.Models.Group", b =>
                 {
                     b.Property<int>("GroupID")
@@ -226,14 +251,8 @@ namespace WebAPI.Migrations
                     b.Property<int?>("GroupID")
                         .HasColumnType("int");
 
-                    b.Property<bool?>("IsActive")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Lastname")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MacAdress")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("PromotionID")
@@ -275,6 +294,17 @@ namespace WebAPI.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("WebAPI.Models.Device", b =>
+                {
+                    b.HasOne("WebAPI.Models.Student", "Student")
+                        .WithMany("Devices")
+                        .HasForeignKey("StudentID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Student");
+                });
+
             modelBuilder.Entity("WebAPI.Models.Signature", b =>
                 {
                     b.HasOne("WebAPI.Models.Student", "Student")
@@ -313,6 +343,8 @@ namespace WebAPI.Migrations
 
             modelBuilder.Entity("WebAPI.Models.Student", b =>
                 {
+                    b.Navigation("Devices");
+
                     b.Navigation("Signatures");
                 });
 #pragma warning restore 612, 618

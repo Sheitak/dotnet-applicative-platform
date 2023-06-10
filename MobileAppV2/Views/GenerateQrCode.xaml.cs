@@ -15,7 +15,7 @@ public partial class GenerateQrCode : ContentPage
         InitializeComponent();
         BindingContext = App.student;
 
-        SignatureLabel.Text = "Votre QrCode pour le : " + DateTime.Now.ToString("dd/MM/yyyy") + " à " + DateTime.Now.ToString("HH:mm:ss");
+        SignatureLabel.Text = $"QrCode pour le : {DateTime.Now:dd/MM/yyyy} à {DateTime.Now:HH:mm:ss}";
     }
 
     private void GenerateQrCodeButton_Clicked(object sender, EventArgs e)
@@ -25,39 +25,25 @@ public partial class GenerateQrCode : ContentPage
 
     private async void GenerateQrCodeWithMacAddress()
     {
+        // TODO : Test Variable, replace with real value
         var tempStudentId = 1;
         var tempMacAddress = "82A70095380Z";
+
         // 82A70095380B
-        var networkInformations = GetMacAddress();
+        var deviceMacAddress = GetMacAddress().ToString();
 
-        var student = await dataSourceProvider.GetInformationsForGenerateQrCode(tempStudentId, networkInformations.ToString());
-        var jsonStudent = JsonConvert.SerializeObject(student);
-        // "{\"StudentID\":1,\"Firstname\":\"Carson\",\"Lastname\":\"Alexander\",\"IsActive\":true,\"MacAdress\":\"82A70095380B\"}"
-        var encodedJson = WebUtility.UrlEncode(jsonStudent);
+        var student = await dataSourceProvider.GetInformationsForGenerateQrCode(tempStudentId, tempMacAddress);
+        
+        if (student != null)
+        {
+            var jsonStudent = JsonConvert.SerializeObject(student);
+            var encodedJson = WebUtility.UrlEncode(jsonStudent);
 
-        var qrImageSource = CreateQrCode(encodedJson);
+            var qrImageSource = CreateQrCode(encodedJson);
 
-        MacAddress.Text = jsonStudent;
-        QrCodeImage.Source = qrImageSource;
-
-
-        /* TODO: Mettre en place l'aspect visuel des retours pour UX
-        } else if (student.MacAdress == networkInformations.ToString() && student.IsActive == false)
-            {
-                await DisplayAlert(
-                    "Appareil Inactif", 
-                    "Cet appareil n'est pas encore activé pour votre compte. Souhaitez-vous faire une demande d'activation ?", 
-                    "Oui"
-                );
-            } else
-            {
-                await DisplayAlert(
-                    "Appareil non-valide",
-                    "Cet appareil ne correspond pas à votre appareil de référence. Veuillez vous rapprocher de la vie étudiante pour toutes modifications.",
-                    "Ok"
-                );
-            }
-        */
+            MacAddress.Text = jsonStudent;
+            QrCodeImage.Source = qrImageSource;
+        }
     }
 
     private static ImageSource CreateQrCode(string data)

@@ -12,6 +12,7 @@ namespace WebAPI.Data
         public DbSet<Signature> Signatures { get; set; } = null!;
         public DbSet<Group> Groups { get; set; } = null!;
         public DbSet<Promotion> Promotions { get; set; } = null!;
+        public DbSet<Device> Devices { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -20,6 +21,7 @@ namespace WebAPI.Data
             modelBuilder.Entity<Signature>().ToTable("Signature");
             modelBuilder.Entity<Group>().ToTable("Group");
             modelBuilder.Entity<Promotion>().ToTable("Promotion");
+            modelBuilder.Entity<Device>().ToTable("Device");
         }
     }
 }

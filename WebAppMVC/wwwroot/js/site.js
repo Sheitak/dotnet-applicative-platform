@@ -59,11 +59,16 @@ $(document).ready(function () {
                 data: 'createdAt',
                 name: 'Date de création',
                 render: function (data, type, row) {
-                    var formatDate = data.split('T')[0];
-                    var dateSplit = formatDate.split('-');
-                    return type === "display" || type === "filter" ?
-                        dateSplit[1] + '-' + dateSplit[2] + '-' + dateSplit[0] + ' ' + data.split('T')[1] :
-                        data;
+                    var date = new Date(data);
+                    var formattedDate = date.toLocaleString('fr-FR', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                    });
+                    return type === "display" || type === "filter" ? formattedDate : data;
                 }, autoWidth: true
             },
             {
@@ -143,11 +148,16 @@ $(document).ready(function () {
                 data: 'createdAt',
                 name: 'Date de création',
                 render: function (data, type, row) {
-                    var formatDate = data.split('T')[0];
-                    var dateSplit = formatDate.split('-');
-                    return type === "display" || type === "filter" ?
-                        dateSplit[1] + '-' + dateSplit[2] + '-' + dateSplit[0] + ' ' + data.split('T')[1] :
-                        data;
+                    var date = new Date(data);
+                    var formattedDate = date.toLocaleString('fr-FR', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                    });
+                    return type === "display" || type === "filter" ? formattedDate : data;
                 }, autoWidth: true
             },
             {

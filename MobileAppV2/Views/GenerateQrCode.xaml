@@ -17,7 +17,7 @@
             WidthRequest="300"/>
         <Button
             x:Name="GenerateQrCodeButton"
-            Text="Generate QR Code"
+            Text="Générer"
             Margin="30"
             Clicked="GenerateQrCodeButton_Clicked"/>
         <Label

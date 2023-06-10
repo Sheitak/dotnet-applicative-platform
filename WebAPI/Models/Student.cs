@@ -12,10 +12,6 @@ namespace WebAPI.Models
         [Required]
         public string Lastname { get; set; }
 
-        public bool? IsActive { get; set; }
-
-        public string? MacAdress { get; set; }
-
         public int? GroupID { get; set; }
 
         public Group? Group { get; set; }
@@ -25,5 +21,7 @@ namespace WebAPI.Models
         public Promotion? Promotion { get; set; }
 
         public ICollection<Signature> Signatures { get; set; }
+
+        public ICollection<Device> Devices { get; set; }
     }
 }

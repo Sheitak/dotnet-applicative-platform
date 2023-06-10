@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+ï»¿using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using Microsoft.AspNetCore.Identity;
@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
 using WebAPI.Data;
+using WebAPI.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -116,7 +117,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-// TODO: Commenté pour le problème lié aux vérifications de certificats de MAUI
+// TODO: Commentï¿½ pour le problï¿½me liï¿½ aux vï¿½rifications de certificats de MAUI
 // https://stackoverflow.com/questions/71047509/trust-anchor-for-certification-path-not-found-in-a-net-maui-project-trying-t/71196389#71196389
 //app.UseHttpsRedirection();
 

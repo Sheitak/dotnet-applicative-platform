@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
-using WebAPI.Models;
+﻿using WebAPI.Models;
 
 namespace WebAPI.Data
 {
@@ -12,10 +10,9 @@ namespace WebAPI.Data
             ArgumentNullException.ThrowIfNull(context, nameof(context));
             context.Database.EnsureCreated();
 
-            // Look for any students.
             if (context.Students.Any())
             {
-                return;   // DB has been seeded
+                return;
             }
 
             var promotions = new Promotion[]
@@ -43,9 +40,9 @@ namespace WebAPI.Data
 
             var students = new Student[]
             {
-                new Student{ Firstname="Carson", Lastname="Alexander", IsActive=true, MacAdress="82A70095380B", GroupID=1, PromotionID=1 },
-                new Student{ Firstname="Meredith", Lastname="Alonso", IsActive=false, MacAdress="82A70095380B", GroupID=1, PromotionID=2 },
-                new Student{ Firstname="Arturo", Lastname="Anand", IsActive=false, MacAdress="82A70095380B", GroupID=2, PromotionID=1 },
+                new Student{ Firstname="Carson", Lastname="Alexander", GroupID=1, PromotionID=1 },
+                new Student{ Firstname="Meredith", Lastname="Alonso", GroupID=1, PromotionID=2 },
+                new Student{ Firstname="Arturo", Lastname="Anand", GroupID=2, PromotionID=1 },
                 new Student{ Firstname="Gytis", Lastname="Barzdukas", GroupID=2, PromotionID=1 },
                 new Student{ Firstname="Yan", Lastname="Li", GroupID=2, PromotionID=3 }
             };
@@ -66,11 +63,25 @@ namespace WebAPI.Data
                 new Signature{ CreatedAt=DateTime.Parse("2021-01-01"), IsPresent=true, StudentID=3},
                 new Signature{ CreatedAt=DateTime.Parse("2020-07-10"), IsPresent=false, StudentID=4},
                 new Signature{ CreatedAt=DateTime.Parse("2020-07-11"), IsPresent=true, StudentID=4},
-                new Signature{ CreatedAt=DateTime.Parse("2018-05-18"), IsPresent=false, StudentID=5},
+                new Signature{ CreatedAt=DateTime.Parse("2018-05-18"), IsPresent=false, StudentID=5}
             };
             foreach (Signature signature in signatures)
             {
                 context.Signatures.Add(signature);
+            }
+            context.SaveChanges();
+
+            var devices = new Device[]
+            {
+                new Device{ MacAddress="82A70095380B", IsActive=true, StudentID=1},
+                new Device{ MacAddress="82A70095380C", IsActive=false, StudentID=1},
+                new Device{ MacAddress="82A70095380D", IsActive=false, StudentID=1},
+                new Device{ MacAddress="82A70095380B", IsActive=true, StudentID=2},
+                new Device{ MacAddress="82A70095380E", IsActive=false, StudentID=2}
+            };
+            foreach (Device device in devices)
+            {
+                context.Devices.Add(device);
             }
             context.SaveChanges();
         }

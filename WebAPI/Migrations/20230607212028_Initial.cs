@@ -131,8 +131,6 @@ namespace WebAPI.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Firstname = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Lastname = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: true),
-                    MacAdress = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     GroupID = table.Column<int>(type: "int", nullable: true),
                     PromotionID = table.Column<int>(type: "int", nullable: true)
                 },
@@ -149,6 +147,27 @@ namespace WebAPI.Migrations
                         column: x => x.PromotionID,
                         principalTable: "Promotion",
                         principalColumn: "PromotionID");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Device",
+                columns: table => new
+                {
+                    DeviceID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MacAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    StudentID = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Device", x => x.DeviceID);
+                    table.ForeignKey(
+                        name: "FK_Device_Student_StudentID",
+                        column: x => x.StudentID,
+                        principalTable: "Student",
+                        principalColumn: "StudentID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -195,6 +214,11 @@ namespace WebAPI.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Device_StudentID",
+                table: "Device",
+                column: "StudentID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Signature_StudentID",
                 table: "Signature",
                 column: "StudentID");
@@ -221,6 +245,9 @@ namespace WebAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Device");
 
             migrationBuilder.DropTable(
                 name: "Signature");
