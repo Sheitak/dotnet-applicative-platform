@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using WebAPI.Data;
@@ -128,14 +127,14 @@ namespace WebAPI.Controllers
             {
                 return NotFound();
             }
-            
+
             return new DataTableResponse
             {
                 RecordsTotal = student.Signatures.Count,
                 RecordsFiltered = 10,
                 Data = student.Signatures.Select(sign => SignatureToDTO(sign)).ToArray()
             };
-            
+
         }
 
         // GET: api/Students/GetById/5
@@ -179,7 +178,7 @@ namespace WebAPI.Controllers
                 .Include(s => s.Promotion)
                 .FirstOrDefaultAsync(s => s.StudentID == id)
             ;
-            
+
             if (student == null)
             {
                 return NotFound();
@@ -290,7 +289,7 @@ namespace WebAPI.Controllers
         }
         // </snippet_GetByIdWithMacAddress>
 
-        // PUT: api/Students/5
+        // PUT: api/Students/1
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         /// <summary>
         /// Update a specific Student.

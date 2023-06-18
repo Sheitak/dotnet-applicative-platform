@@ -73,11 +73,11 @@ namespace WebAPI.Data
 
             var devices = new Device[]
             {
-                new Device{ MacAddress="82A70095380B", IsActive=true, StudentID=1},
-                new Device{ MacAddress="82A70095380C", IsActive=false, StudentID=1},
-                new Device{ MacAddress="82A70095380D", IsActive=false, StudentID=1},
-                new Device{ MacAddress="82A70095380B", IsActive=true, StudentID=2},
-                new Device{ MacAddress="82A70095380E", IsActive=false, StudentID=2}
+                new Device{ MacAddress="82A70095380B", IsActive=true, StudentID=1, RegisteredAt=DateTime.Parse("2022-09-01")},
+                new Device{ MacAddress="82A70095380C", IsActive=false, StudentID=1, RegisteredAt=DateTime.Parse("2023-03-15")},
+                new Device{ MacAddress="82A70095380D", IsActive=false, StudentID=1, RegisteredAt = DateTime.Parse("2022-09-10")},
+                new Device{ MacAddress="82A70095380B", IsActive=true, StudentID=2, RegisteredAt=DateTime.Parse("2023-02-09")},
+                new Device{ MacAddress="82A70095380E", IsActive=false, StudentID=2, RegisteredAt = DateTime.Parse("2023-02-22")}
             };
             foreach (Device device in devices)
             {

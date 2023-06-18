@@ -8,6 +8,8 @@
 
         public bool IsActive { get; set; }
 
+        public DateTime RegisteredAt { get; set; }
+
         public int StudentID { get; set; }
 
         public Student Student { get; set; }

@@ -27,11 +27,6 @@ namespace WebAppMVC.Controllers
             return View();
         }
 
-        public IActionResult RegisterDevice()
-        {
-            return View();
-        }
-
         public IActionResult About()
         {
             return View();

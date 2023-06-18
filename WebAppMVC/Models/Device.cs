@@ -1,6 +1,6 @@
-﻿namespace WebAPI.Models.DTO
+﻿namespace WebAppMVC.Models
 {
-    public class DeviceDTO
+    public class Device
     {
         public int DeviceID { get; set; }
 
@@ -10,8 +10,6 @@
 
         public DateTime RegisteredAt { get; set; }
 
-        public int? StudentID { get; set; }
-
-        public StudentDTO? Student { get; set; }
+        public Student Student { get; set; }
     }
 }

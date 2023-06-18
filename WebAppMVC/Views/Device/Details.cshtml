@@ -1,0 +1,36 @@
+﻿@model Device
+
+@{
+    ViewData["Title"] = "Appareil :";
+}
+
+<h2>@ViewData["Title"] @Model.MacAddress</h2>
+
+<p>Propriétaire : @Model.Student.Firstname @Model.Student.Lastname</p>
+<p>Enregistré le @Model.RegisteredAt</p>
+<p>L'état actuel de l'appareil est :</p>
+
+@if (Model.IsActive)
+{
+    <div class='alert alert-primary text-center' role='alert'>Actif</div>
+
+    <p>Souhaitez-vous désactiver l'appareil pour cet étudiant ?</p>
+
+    <form method="post" asp-controller="Device" asp-action="Edit" asp-route-activate="false">
+        <input type="hidden" asp-for="DeviceID" />
+        <input type="hidden" asp-for="MacAddress" />
+        <button type="submit" class="btn btn-danger">Désactiver</button>
+    </form>
+}
+else
+{
+    <div class='alert alert-danger text-center' role='alert'>Inactif</div>
+
+    <p>Souhaitez-vous activer l'appareil pour cet étudiant ?</p>
+
+    <form method="post" asp-controller="Device" asp-action="Edit" asp-route-activate="true">
+        <input type="hidden" asp-for="DeviceID" />
+        <input type="hidden" asp-for="MacAddress" />
+        <button type="submit" class="btn btn-success">Activer</button>
+    </form>
+}

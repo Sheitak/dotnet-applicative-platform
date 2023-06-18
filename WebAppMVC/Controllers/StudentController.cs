@@ -21,16 +21,20 @@ namespace WebAppMVC.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Details(int id)
         {
             var student = await _studentRepository.GetStudent(id);
 
             if (student != null)
             {
                 ViewData["Student"] = student;
+                return View(student);
             }
-
-            return View(student);
+            else
+            {
+                ViewBag.ErrorMessage = "Etudiant introuvable";
+                return View("Error");
+            }
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

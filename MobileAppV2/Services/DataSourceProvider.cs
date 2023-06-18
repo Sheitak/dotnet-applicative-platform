@@ -89,6 +89,7 @@ namespace MobileAppV2.Services
             {
                 MacAddress = macAddress,
                 IsActive = false,
+                RegisteredAt = DateTime.Now,
                 StudentID = id
             };
 

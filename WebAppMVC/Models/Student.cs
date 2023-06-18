@@ -9,6 +9,7 @@
         public string? Lastname { get; set; }
 
         public Group? Group { get; set; }
+
         public Promotion? Promotion { get; set; }
 
         public List<Signature>? Signatures { get; set; }

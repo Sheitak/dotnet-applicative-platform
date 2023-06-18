@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Elèves";
+    ViewData["Title"] = "Étudiants";
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -17,5 +17,5 @@
 </table>
 
 <script type="text/javascript">
-    var editStudentUrl = '@Url.Action("Edit", "Student", new { id = "__id__" })';
+    var detailsStudentUrl = '@Url.Action("Details", "Student", new { id = "__id__" })';
 </script>

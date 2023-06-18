@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<StudentRepository>();
+builder.Services.AddScoped<DeviceRepository>();
 
 var app = builder.Build();
 

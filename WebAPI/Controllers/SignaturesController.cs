@@ -65,7 +65,7 @@ namespace WebAPI.Controllers
         /// <returns></returns>
         /// <response code="201">Returns all signatures correctly with complete DataTable</response>
         /// <response code="400">If the students list is null</response>
-        [HttpGet("/api/datatable/Signatures")]
+        [HttpGet("/api/Datatable/Signatures")]
         public async Task<ActionResult<DataTableResponse>> GetDataTableSignatures()
         {
             if (_context.Signatures == null)
