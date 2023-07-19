@@ -11,10 +11,11 @@ namespace DesktopApp
         Group group = new();
         Promotion promotion = new();
 
-        public FormInterface()
+        public FormInterface(User user)
         {
             InitializeComponent();
             CenterToScreen();
+            Text = $"3iL Signatures Administration - Bienvenue {user.UserName}";
         }
 
         public delegate void LoadEntitiesDelegate();

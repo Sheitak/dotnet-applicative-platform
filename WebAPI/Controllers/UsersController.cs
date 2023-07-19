@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Models;
+using WebAPI.Models.DTO;
 using WebAPI.Services;
 
 namespace WebAPI.Controllers
@@ -20,19 +21,15 @@ namespace WebAPI.Controllers
         }
 
         // POST: api/Users
-        //[Authorize]
+        [Authorize]
         [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
+        public async Task<ActionResult<UserDTO>> PostUser(User user)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return BadRequest(ModelState);
-            //}
-
             var result = await _userManager.CreateAsync(
-                new IdentityUser() { 
-                    UserName = user.UserName, 
-                    Email = user.Email 
+                new IdentityUser()
+                {
+                    UserName = user.UserName,
+                    Email = user.Email
                 },
                 user.Password
             );
@@ -42,41 +39,43 @@ namespace WebAPI.Controllers
                 return BadRequest(result.Errors);
             }
 
-            user.Password = null;
-            //return Created("", user);
-            return CreatedAtAction("GetUser", new { username = user.UserName }, user);
+            return CreatedAtAction(
+                nameof(GetUser),
+                new UserDTO { UserName = user.UserName, Email = user.Email }
+            );
         }
 
-        // GET: api/Users/username
+        // GET: api/Users/aa0d77e3-b79b-44a5-a817-176dff334a33
         [Authorize]
-        [HttpGet("{username}")]
-        public async Task<ActionResult<User>> GetUser(string username)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<UserDTO>> GetUser(string id)
         {
-            IdentityUser user = await _userManager.FindByNameAsync(username);
+            /* Récupère le "sub" du token via la revendication.
+            var id = HttpContext.User.Claims.FirstOrDefault(
+                c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+            )?.Value;
+            */
+
+            if (id == null)
+            {
+                return BadRequest("Unable to retrieve username from token.");
+            }
+
+            IdentityUser? user = await _userManager.FindByIdAsync(id);
 
             if (user == null)
             {
                 return NotFound();
             }
 
-            return new User
-            {
-                UserName = user.UserName,
-                Email = user.Email
-            };
+            return new UserDTO { UserName = user.UserName, Email = user.Email };
         }
 
-        // POST: api/Users/BearerToken
-        //[Authorize]
-        [HttpPost("BearerToken")]
+        // POST: api/Users/Auth
+        [HttpPost("Auth")]
         public async Task<ActionResult<AuthenticationResponse>> CreateBearerToken(AuthenticationRequest request)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return BadRequest("Bad credentials");
-            //}
-
-            var user = await _userManager.FindByNameAsync(request.UserName);
+            var user = await _userManager.FindByEmailAsync(request.Email);
 
             if (user == null)
             {
@@ -92,7 +91,18 @@ namespace WebAPI.Controllers
 
             var token = _jwtService.CreateToken(user);
 
-            return Ok(token);
+            var response = new AuthenticationResponse
+            {
+                Token = token.Token,
+                Expiration = token.Expiration,
+                User = new UserDTO
+                {
+                    UserName = user.UserName,
+                    Email = user.Email
+                }
+            };
+
+            return Ok(response);
         }
     }
 }

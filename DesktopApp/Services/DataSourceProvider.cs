@@ -1,5 +1,6 @@
 ﻿using DesktopApp.Models;
 using Newtonsoft.Json;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
 namespace DesktopApp.Services
@@ -9,6 +10,7 @@ namespace DesktopApp.Services
         private DataSourceProvider() { }
 
         private static DataSourceProvider? _instance;
+        private Auth _auth;
 
         public static DataSourceProvider GetInstance()
         {
@@ -16,10 +18,40 @@ namespace DesktopApp.Services
             return _instance;
         }
 
+        // AUTH
+        internal async Task<Auth> Authentication(User user)
+        {
+            using var client = new HttpClient();
+            HttpResponseMessage response = await client.PostAsJsonAsync("https://localhost:7058/api/Users/Auth", user);
+            response.EnsureSuccessStatusCode();
+
+            _auth = await response.Content.ReadAsAsync<Auth>();
+
+            return _auth;
+        }
+
+        internal async Task<User> GetUser(string id)
+        {
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _auth.Token);
+
+            HttpResponseMessage response = await client.GetAsync($"https://localhost:7058/api/Users/{id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseString = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<User>(responseString) ?? throw new Exception("Failed to deserialize user.");
+            }
+
+            throw new Exception($"Failed to retrieve user. StatusCode: {response.StatusCode}");
+        }
+
         // GET COLLECTION
         internal async Task<List<Student>> GetStudents()
         {
             using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _auth.Token);
+
             HttpResponseMessage response = await client.GetAsync("https://localhost:7058/api/Students");
 
             if (response.IsSuccessStatusCode)
@@ -34,6 +66,8 @@ namespace DesktopApp.Services
         internal async Task<List<Group>> GetGroups()
         {
             using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _auth.Token);
+
             HttpResponseMessage response = await client.GetAsync("https://localhost:7058/api/Groups");
 
             if (response.IsSuccessStatusCode)
@@ -48,6 +82,8 @@ namespace DesktopApp.Services
         internal async Task<List<Promotion>> GetPromotions()
         {
             using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _auth.Token);
+
             HttpResponseMessage response = await client.GetAsync("https://localhost:7058/api/Promotions");
 
             if (response.IsSuccessStatusCode)
@@ -63,6 +99,8 @@ namespace DesktopApp.Services
         internal async Task<Student> GetStudentById(int id)
         {
             using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _auth.Token);
+
             HttpResponseMessage response = await client.GetAsync($"https://localhost:7058/api/Students/GetById/{id}");
 
             if (response.IsSuccessStatusCode)
@@ -77,6 +115,8 @@ namespace DesktopApp.Services
         internal async Task<Group> GetGroupById(int id)
         {
             using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _auth.Token);
+
             HttpResponseMessage response = await client.GetAsync($"https://localhost:7058/api/Groups/{id}");
 
             if (response.IsSuccessStatusCode)
@@ -91,6 +131,8 @@ namespace DesktopApp.Services
         internal async Task<Promotion> GetPromotionById(int id)
         {
             using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _auth.Token);
+
             HttpResponseMessage response = await client.GetAsync($"https://localhost:7058/api/Promotions/{id}");
 
             if (response.IsSuccessStatusCode)
@@ -106,6 +148,8 @@ namespace DesktopApp.Services
         internal async Task<Group> GetGroupByName(string name)
         {
             using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _auth.Token);
+
             HttpResponseMessage response = await client.GetAsync($"https://localhost:7058/api/Groups/ByName/{name}");
 
             if (response.IsSuccessStatusCode)
@@ -120,6 +164,8 @@ namespace DesktopApp.Services
         internal async Task<Promotion> GetPromotionByName(string name)
         {
             using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _auth.Token);
+
             HttpResponseMessage response = await client.GetAsync($"https://localhost:7058/api/Promotions/ByName/{name}");
 
             if (response.IsSuccessStatusCode)
@@ -135,6 +181,8 @@ namespace DesktopApp.Services
         internal async Task<Student> CreateStudent(Student student)
         {
             using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _auth.Token);
+
             HttpResponseMessage response = await client.PostAsJsonAsync("https://localhost:7058/api/Students", student);
             response.EnsureSuccessStatusCode();
 
@@ -144,6 +192,8 @@ namespace DesktopApp.Services
         internal async Task<Group> CreateGroup(Group group)
         {
             using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _auth.Token);
+
             HttpResponseMessage response = await client.PostAsJsonAsync("https://localhost:7058/api/Groups", group);
             response.EnsureSuccessStatusCode();
 
@@ -153,6 +203,8 @@ namespace DesktopApp.Services
         internal async Task<Promotion> CreatePromotion(Promotion promotion)
         {
             using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _auth.Token);
+
             HttpResponseMessage response = await client.PostAsJsonAsync("https://localhost:7058/api/Promotions", promotion);
             response.EnsureSuccessStatusCode();
 
@@ -163,8 +215,10 @@ namespace DesktopApp.Services
         internal async Task<Student> UpdateStudent(Student student)
         {
             using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _auth.Token);
+
             HttpResponseMessage response = await client.PutAsJsonAsync(
-                $"https://localhost:7058/api/Students/{student.StudentID}", 
+                $"https://localhost:7058/api/Students/{student.StudentID}",
                 student
             );
             response.EnsureSuccessStatusCode();
@@ -175,8 +229,10 @@ namespace DesktopApp.Services
         internal async Task<Group> UpdateGroup(Group group)
         {
             using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _auth.Token);
+
             HttpResponseMessage response = await client.PutAsJsonAsync(
-                $"https://localhost:7058/api/Groups/{group.GroupID}", 
+                $"https://localhost:7058/api/Groups/{group.GroupID}",
                 group
             );
             response.EnsureSuccessStatusCode();
@@ -187,8 +243,10 @@ namespace DesktopApp.Services
         internal async Task<Promotion> UpdatePromotion(Promotion promotion)
         {
             using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _auth.Token);
+
             HttpResponseMessage response = await client.PutAsJsonAsync(
-                $"https://localhost:7058/api/Promotions/{promotion.PromotionID}", 
+                $"https://localhost:7058/api/Promotions/{promotion.PromotionID}",
                 promotion
             );
             response.EnsureSuccessStatusCode();
@@ -199,6 +257,8 @@ namespace DesktopApp.Services
         internal async Task<bool> DeleteStudent(int id)
         {
             using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _auth.Token);
+
             HttpResponseMessage response = await client.DeleteAsync($"https://localhost:7058/api/Students/{id}");
             response.EnsureSuccessStatusCode();
 
@@ -208,6 +268,8 @@ namespace DesktopApp.Services
         internal async Task<bool> DeleteGroup(int id)
         {
             using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _auth.Token);
+
             HttpResponseMessage response = await client.DeleteAsync($"https://localhost:7058/api/Groups/{id}");
             response.EnsureSuccessStatusCode();
 
@@ -217,6 +279,8 @@ namespace DesktopApp.Services
         internal async Task<bool> DeletePromotion(int id)
         {
             using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _auth.Token);
+
             HttpResponseMessage response = await client.DeleteAsync($"https://localhost:7058/api/Promotions/{id}");
             response.EnsureSuccessStatusCode();
 

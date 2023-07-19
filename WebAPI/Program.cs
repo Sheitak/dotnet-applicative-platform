@@ -1,14 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
-using Microsoft.AspNetCore.Identity;
-using WebAPI.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
 using WebAPI.Data;
-using WebAPI.Controllers;
+using WebAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,7 +44,8 @@ builder.Services.AddDbContext<SignatureContext>(
 builder.Services.AddScoped<DbInitializer>();
 builder.Services.AddScoped<JwtService>();
 
-builder.Services.AddIdentityCore<IdentityUser>(options => {
+builder.Services.AddIdentityCore<IdentityUser>(options =>
+{
     options.SignIn.RequireConfirmedAccount = false;
     options.User.RequireUniqueEmail = true;
     options.Password.RequireDigit = false;

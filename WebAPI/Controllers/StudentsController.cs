@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using WebAPI.Data;
@@ -33,7 +34,7 @@ namespace WebAPI.Controllers
         /// <returns></returns>
         /// <response code="201">Returns all students correctly</response>
         /// <response code="400">If the students list is null</response>
-        //[Authorize]
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<StudentDTO>>> GetStudents()
         {

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Data;
 using WebAPI.Models;
@@ -33,10 +28,10 @@ namespace WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Group>>> GetGroups()
         {
-          if (_context.Groups == null)
-          {
-              return NotFound();
-          }
+            if (_context.Groups == null)
+            {
+                return NotFound();
+            }
             return await _context.Groups.ToListAsync();
         }
 
@@ -187,21 +182,21 @@ namespace WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<GroupDTO>> PostGroup(GroupDTO groupDTO)
         {
-          if (_context.Groups == null)
-          {
-              return Problem("Entity set 'SignatureContext.Groups'  is null.");
-          }
+            if (_context.Groups == null)
+            {
+                return Problem("Entity set 'SignatureContext.Groups'  is null.");
+            }
 
-          var group = new Group { Name = groupDTO.Name };
+            var group = new Group { Name = groupDTO.Name };
 
-          _context.Groups.Add(group);
-          await _context.SaveChangesAsync();
+            _context.Groups.Add(group);
+            await _context.SaveChangesAsync();
 
-          return CreatedAtAction(
-              nameof(GetGroup), 
-              new { id = group.GroupID }, 
-              GroupToDTO(group)
-          );
+            return CreatedAtAction(
+                nameof(GetGroup),
+                new { id = group.GroupID },
+                GroupToDTO(group)
+            );
         }
 
         // DELETE: api/Groups/5
