@@ -26,7 +26,7 @@ namespace WebAPI.Controllers
         /// <returns></returns>
         /// <response code="201">Returns all signatures correctly</response>
         /// <response code="400">If the signatures list is null</response>
-        //[Authorize]
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SignatureDTO>>> GetSignatures()
         {
@@ -65,6 +65,7 @@ namespace WebAPI.Controllers
         /// <returns></returns>
         /// <response code="201">Returns all signatures correctly with complete DataTable</response>
         /// <response code="400">If the students list is null</response>
+        //[Authorize]
         [HttpGet("/api/Datatable/Signatures")]
         public async Task<ActionResult<DataTableResponse>> GetDataTableSignatures()
         {
@@ -123,7 +124,7 @@ namespace WebAPI.Controllers
         /// <response code="201">Returns the specific signature correctly</response>
         /// <response code="400">If the signature is null</response>
         // <snippet_GetById>
-        //[Authorize]
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<SignatureDTO>> GetSignature(int id)
         {
@@ -236,7 +237,7 @@ namespace WebAPI.Controllers
         /// <response code="201">Returns the newly created signature</response>
         /// <response code="400">If the signature is null</response>
         // <snippet_Create>
-        //[Authorize]
+        [Authorize]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

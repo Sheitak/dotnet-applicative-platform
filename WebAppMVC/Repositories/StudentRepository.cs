@@ -1,13 +1,16 @@
 ﻿using Newtonsoft.Json;
+using System.Net.Http.Headers;
 using WebAppMVC.Models;
 
 namespace WebAppMVC.Repositories
 {
     public class StudentRepository
     {
-        public async Task<Student> GetStudent(int id)
+        public async Task<Student> GetStudent(int id, string token)
         {
             using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
             HttpResponseMessage response = await client.GetAsync($"https://localhost:7058/api/Students/GetById/{id}");
 
             if (response.IsSuccessStatusCode)

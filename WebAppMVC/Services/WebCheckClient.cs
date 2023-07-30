@@ -19,7 +19,7 @@ namespace WebAppMVC.Services
         {
             try
             {
-                using TcpClient client = new TcpClient("ROG-STRIX-SCAR-II-T8QPGR2B", 8787); // Remplacez "localhost" par l'adresse IP ou le nom d'hôte de votre machine où s'exécute l'application Desktop
+                using TcpClient client = new TcpClient("ROG-STRIX-SCAR-II-T8QPGR2B", 8787); // Remplacez ici l'adresse IP ou le nom d'hôte de la machine où s'exécute l'application.
                 byte[] data = Encoding.ASCII.GetBytes("ping");
                 NetworkStream stream = client.GetStream();
 

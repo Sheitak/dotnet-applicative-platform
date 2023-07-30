@@ -1,13 +1,16 @@
 ﻿using Newtonsoft.Json;
+using System.Net.Http.Headers;
 using WebAppMVC.Models;
 
 namespace WebAppMVC.Repositories
 {
     public class DeviceRepository
     {
-        public async Task<Device> GetDevice(int id)
+        public async Task<Device> GetDevice(int id, string token)
         {
             using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
             HttpResponseMessage response = await client.GetAsync($"https://localhost:7058/api/Devices/GetById/{id}");
 
             if (response.IsSuccessStatusCode)
@@ -19,9 +22,11 @@ namespace WebAppMVC.Repositories
             throw new Exception("Failed to retrieve device.");
         }
 
-        public async Task<Device> PutDevice(Device device)
+        public async Task<Device> PutDevice(Device device, string token)
         {
             using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
             HttpResponseMessage response = await client.PutAsJsonAsync(
                 $"https://localhost:7058/api/Devices/{device.DeviceID}",
                 device

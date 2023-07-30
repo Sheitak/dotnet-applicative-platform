@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Data;
 using WebAPI.Models;
@@ -24,7 +25,7 @@ namespace WebAPI.Controllers
         /// <returns></returns>
         /// <response code="201">Returns all groups correctly</response>
         /// <response code="400">If the groups list is null</response>
-        //[Authorize]
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Group>>> GetGroups()
         {
@@ -53,7 +54,7 @@ namespace WebAPI.Controllers
         /// <response code="201">Returns the specific group correctly</response>
         /// <response code="400">If the group is null</response>
         // <snippet_GetById>
-        //[Authorize]
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Group>> GetGroup(int id)
         {
@@ -90,7 +91,7 @@ namespace WebAPI.Controllers
         /// <response code="201">Returns the specific group correctly</response>
         /// <response code="400">If the group is null</response>
         // <snippet_GetByName>
-        //[Authorize]
+        [Authorize]
         [HttpGet("ByName/{name}")]
         public async Task<ActionResult<Group>> GetGroupByName(string name)
         {
@@ -128,6 +129,7 @@ namespace WebAPI.Controllers
         /// <response code="201">Returns the updated group correctly</response>
         /// <response code="400">If the group is null</response>
         // <snippet_Update>
+        [Authorize]
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -176,7 +178,7 @@ namespace WebAPI.Controllers
         /// <response code="201">Returns the newly created group</response>
         /// <response code="400">If the group is null</response>
         // <snippet_Create>
-        //[Authorize]
+        [Authorize]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -207,7 +209,7 @@ namespace WebAPI.Controllers
         /// <returns></returns>
         /// <response code="201">Group correctly deleted</response>
         /// <response code="400">If the group is null</response>
-        //[Authorize]
+        [Authorize]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

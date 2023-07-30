@@ -2,6 +2,7 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 $(document).ready(function () {
+
     $('#students').DataTable({
         processing: true,
         ordering: true,
@@ -256,4 +257,5 @@ $(document).ready(function () {
             }
         ]
     });
+
 });

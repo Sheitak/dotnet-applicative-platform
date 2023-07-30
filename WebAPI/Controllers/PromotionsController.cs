@@ -25,7 +25,7 @@ namespace WebAPI.Controllers
         /// <returns></returns>
         /// <response code="201">Returns all promotions correctly</response>
         /// <response code="400">If the promotions list is null</response>
-        //[Authorize]
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Promotion>>> GetPromotions()
         {
@@ -54,7 +54,7 @@ namespace WebAPI.Controllers
         /// <response code="201">Returns the specific promotion correctly</response>
         /// <response code="400">If the promotion is null</response>
         // <snippet_GetById>
-        //[Authorize]
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Promotion>> GetPromotion(int id)
         {
@@ -90,7 +90,7 @@ namespace WebAPI.Controllers
         /// <response code="201">Returns the specific promotion correctly</response>
         /// <response code="400">If the promotion is null</response>
         // <snippet_GetByName>
-        //[Authorize]
+        [Authorize]
         [HttpGet("ByName/{name}")]
         public async Task<ActionResult<Promotion>> GetPromotionByName(string name)
         {
@@ -128,7 +128,7 @@ namespace WebAPI.Controllers
         /// <response code="201">Returns the updated promotion correctly</response>
         /// <response code="400">If the promotion is null</response>
         // <snippet_Update>
-        //[Authorize]
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<ActionResult<PromotionDTO>> PutPromotion(int id, PromotionDTO promotionDTO)
         {
@@ -175,7 +175,7 @@ namespace WebAPI.Controllers
         /// <response code="201">Returns the newly created promotion</response>
         /// <response code="400">If the promotion is null</response>
         // <snippet_Create>
-        //[Authorize]
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<PromotionDTO>> PostPromotion(PromotionDTO promotionDTO)
         {
@@ -204,7 +204,7 @@ namespace WebAPI.Controllers
         /// <returns></returns>
         /// <response code="201">Promotion correctly deleted</response>
         /// <response code="400">If the promotion is null</response>
-        //[Authorize]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpDelete("{id}")]

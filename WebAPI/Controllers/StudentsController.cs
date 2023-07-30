@@ -68,6 +68,7 @@ namespace WebAPI.Controllers
         /// <returns></returns>
         /// <response code="201">Returns all students correctly with complete DataTable</response>
         /// <response code="400">If the students list is null</response>
+        //[Authorize]
         [HttpGet("/api/Datatable/Students")]
         public async Task<ActionResult<DataTableResponse>> GetDataTableStudents()
         {
@@ -109,6 +110,7 @@ namespace WebAPI.Controllers
         /// <returns></returns>
         /// <response code="201">Returns one student correctly with complete Signature DataTable</response>
         /// <response code="400">If the student is null</response>
+        //[Authorize]
         [HttpGet("/api/Datatable/Student/{id}")]
         public async Task<ActionResult<DataTableResponse>> GetDataTableStudentSignatures(int id)
         {
@@ -165,7 +167,7 @@ namespace WebAPI.Controllers
         /// <response code="201">Returns the specific student correctly</response>
         /// <response code="400">If the student is null</response>
         // <snippet_GetById>
-        //[Authorize]
+        [Authorize]
         [HttpGet("GetById/{id}")]
         public async Task<ActionResult<StudentDTO>> GetStudent(int id)
         {
@@ -231,6 +233,7 @@ namespace WebAPI.Controllers
         /// <response code="201">Returns the specific device student informations correctly</response>
         /// <response code="400">If the student is null</response>
         // <snippet_GetByIdWithMacAddress>
+        // TODO: MAUI AUTH AZURE
         //[Authorize]
         [HttpGet("GetByIdWithMacAddress/{id}/{macAddress}")]
         public async Task<ActionResult<StudentDTO>> GetStudentByIdWithMacAddress(int id, string macAddress)
@@ -319,7 +322,7 @@ namespace WebAPI.Controllers
         /// <response code="201">Returns the updated student correctly</response>
         /// <response code="400">If the student is null</response>
         // <snippet_Update>
-        //[Authorize]
+        [Authorize]
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -410,7 +413,7 @@ namespace WebAPI.Controllers
         /// <response code="201">Returns the newly created student</response>
         /// <response code="400">If the student is null</response>
         // <snippet_Create>
-        //[Authorize]
+        [Authorize]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -464,7 +467,7 @@ namespace WebAPI.Controllers
         /// <returns></returns>
         /// <response code="201">Student correctly deleted</response>
         /// <response code="400">If the student is null</response>
-        //[Authorize]
+        [Authorize]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

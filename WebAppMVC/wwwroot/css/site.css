@@ -24,3 +24,11 @@ body {
 .logo-3il {
     width: 150px;
 }
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 80vh;
+}

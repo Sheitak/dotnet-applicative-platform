@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using System.Diagnostics;
+using WebAppMVC.Filters;
 using WebAppMVC.Models;
 using WebAppMVC.Services;
 
@@ -15,23 +17,31 @@ namespace WebAppMVC.Controllers
             _logger = logger;
         }
 
+        [JwtAuthorize]
         public IActionResult Index()
         {
+            string userEmail = Request.Cookies["UserEmail"];
+            ViewBag.UserEmail = userEmail;
+
             return View();
         }
 
+        [JwtAuthorize]
         public IActionResult Terminal()
         {
             bool terminalStatus = _webCheckClient.CheckTerminalStatus();
             ViewBag.TerminalStatus = terminalStatus;
+
             return View();
         }
 
+        [JwtAuthorize]
         public IActionResult About()
         {
             return View();
         }
 
+        [JwtAuthorize]
         public IActionResult Signatures()
         {
             return View();

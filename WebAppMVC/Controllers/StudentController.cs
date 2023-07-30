@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using WebAppMVC.Filters;
 using WebAppMVC.Models;
 using WebAppMVC.Repositories;
 
@@ -16,23 +17,41 @@ namespace WebAppMVC.Controllers
             _studentRepository = studentRepository;
         }
 
+        [JwtAuthorize]
         public IActionResult Index()
         {
             return View();
         }
 
+        [JwtAuthorize]
         public async Task<IActionResult> Details(int id)
         {
-            var student = await _studentRepository.GetStudent(id);
+            try
+            {
+                var token = Request.Cookies["JwtToken"];
 
-            if (student != null)
-            {
-                ViewData["Student"] = student;
-                return View(student);
+                if (string.IsNullOrEmpty(token))
+                {
+                    ViewBag.ErrorMessage = "Token Bearer introuvable";
+                    return View("Error");
+                }
+
+                var student = await _studentRepository.GetStudent(id, token);
+
+                if (student != null)
+                {
+                    ViewData["Student"] = student;
+                    return View(student);
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "Etudiant introuvable";
+                    return View("Error");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                ViewBag.ErrorMessage = "Etudiant introuvable";
+                ViewBag.ErrorMessage = $"Une erreur s'est produite lors de la récupération des détails de l'étudiant : {ex.Message}";
                 return View("Error");
             }
         }

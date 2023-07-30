@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using WebAppMVC.Filters;
 using WebAppMVC.Models;
 using WebAppMVC.Repositories;
 
@@ -16,27 +17,46 @@ namespace WebAppMVC.Controllers
             _deviceRepository = deviceRepository;
         }
 
+        [JwtAuthorize]
         public ActionResult Index()
         {
             return View();
         }
 
+        [JwtAuthorize]
         public async Task<IActionResult> Details(int id)
         {
-            var device = await _deviceRepository.GetDevice(id);
+            try
+            {
+                var token = Request.Cookies["JwtToken"];
 
-            if (device != null)
-            {
-                ViewData["Device"] = device;
-                return View(device);
+                if (string.IsNullOrEmpty(token))
+                {
+                    ViewBag.ErrorMessage = "Token Bearer introuvable";
+                    return View("Error");
+                }
+
+                var device = await _deviceRepository.GetDevice(id, token);
+
+                if (device != null)
+                {
+                    ViewData["Device"] = device;
+                    return View(device);
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "Appareil introuvable";
+                    return View("Error");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                ViewBag.ErrorMessage = "Appareil introuvable";
+                ViewBag.ErrorMessage = $"Une erreur s'est produite lors de la récupération des détails de l'appareil : {ex.Message}";
                 return View("Error");
             }
         }
 
+        [JwtAuthorize]
         public async Task<IActionResult> Edit(Device device, bool activate)
         {
             try
@@ -49,11 +69,19 @@ namespace WebAppMVC.Controllers
                     device.IsActive = false;
                 }
 
-                await _deviceRepository.PutDevice(device);
+                var token = Request.Cookies["JwtToken"];
+
+                if (string.IsNullOrEmpty(token))
+                {
+                    ViewBag.ErrorMessage = "Token Bearer introuvable";
+                    return View("Error");
+                }
+
+                await _deviceRepository.PutDevice(device, token);
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = $"Erreur de modification : {ex.Message}";
+                ViewBag.ErrorMessage = $"Une erreur s'est produite lors de la modification de l'appareil : {ex.Message}";
                 return View("Error");
             }
 

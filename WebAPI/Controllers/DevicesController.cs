@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Data;
 using WebAPI.Models;
@@ -32,7 +33,7 @@ namespace WebAPI.Controllers
         /// <returns></returns>
         /// <response code="201">Returns all devices correctly</response>
         /// <response code="400">If the devices list is null</response>
-        //[Authorize]
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DeviceDTO>>> GetDevices()
         {
@@ -63,6 +64,7 @@ namespace WebAPI.Controllers
         /// <returns></returns>
         /// <response code="201">Returns all devices correctly with complete DataTable</response>
         /// <response code="400">If the devices list is null</response>
+        //[Authorize]
         [HttpGet("/api/Datatable/Devices")]
         public async Task<ActionResult<DataTableResponse>> GetDataTableDevices()
         {
@@ -118,7 +120,7 @@ namespace WebAPI.Controllers
         /// <response code="201">Returns the specific device correctly</response>
         /// <response code="400">If the device is null</response>
         // <snippet_GetById>
-        //[Authorize]
+        [Authorize]
         [HttpGet("GetById/{id}")]
         public async Task<ActionResult<DeviceDTO>> GetDevice(int id)
         {
@@ -166,7 +168,7 @@ namespace WebAPI.Controllers
         /// <returns></returns>
         /// <response code="201">Returns all devices by student correctly</response>
         /// <response code="400">If the devices list is null</response>
-        //[Authorize]
+        [Authorize]
         [HttpGet("GetDevicesByStudent/{id}")]
         public async Task<ActionResult<IEnumerable<DeviceDTO>>> GetDevicesByStudent(int id)
         {
@@ -219,7 +221,7 @@ namespace WebAPI.Controllers
         /// <response code="201">Returns the newly created device</response>
         /// <response code="400">If the device is null</response>
         // <snippet_Create>
-        //[Authorize]
+        [Authorize]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -276,7 +278,7 @@ namespace WebAPI.Controllers
         /// <response code="201">Returns the updated device correctly</response>
         /// <response code="400">If the device is null</response>
         // <snippet_Update>
-        //[Authorize]
+        [Authorize]
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
