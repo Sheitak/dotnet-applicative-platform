@@ -62,7 +62,7 @@ namespace MobileAppV2.Services
                         {
                             To = new List<string>
                         {
-                            "admin@3il.com"
+                            "admin@3il.fr"
                         },
                             Subject = "Demande d'activation",
                             Body = $"Etudiant : John Doe. Relance d'une demande d'activation pour l'appareil : {macAddress}"

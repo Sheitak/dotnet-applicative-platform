@@ -7,9 +7,15 @@
     xmlns:local="clr-namespace:MobileAppV2"
     Shell.FlyoutBehavior="Disabled">
 
-    <TabBar>
+    <ShellContent 
+        Title="Login" 
+        ContentTemplate="{DataTemplate local:LoginPage}" 
+        Route="Login"/>
+
+    <TabBar Route="Home">
         <ShellContent
             x:Name="AppStudent"
+            Route="AppStudent"
             Title="Acceuil"
             ContentTemplate="{DataTemplate local:MainPage}"
             Icon="icon_notes"/>

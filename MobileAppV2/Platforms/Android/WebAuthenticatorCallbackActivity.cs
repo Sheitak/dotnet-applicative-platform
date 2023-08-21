@@ -1,7 +1,6 @@
 ﻿using Android.App;
 using Android.Content.PM;
 
-//namespace MobileAppV2.Platforms.Android
 namespace MobileAppV2
 {
     // https://learn.microsoft.com/en-us/dotnet/maui/platform-integration/communication/authentication?tabs=android

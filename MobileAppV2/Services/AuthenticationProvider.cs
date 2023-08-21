@@ -1,4 +1,6 @@
-﻿namespace MobileAppV2.Services
+﻿using MobileAppV2.Models;
+
+namespace MobileAppV2.Services
 {
     internal class AuthenticationProvider
     {
@@ -12,7 +14,7 @@
             return _instance;
         }
 
-        internal async Task<object> LoginAsync()
+        internal async Task<Student> LoginAsync()
         {
             try
             {
@@ -21,18 +23,27 @@
                     new Uri("myapp://")
                 );
 
-                string accessToken = authResult?.AccessToken;
-                var yu = authResult;
+                /*
+                string email = null;
 
-                //return accessToken;
+                if (authResult?.Properties != null && authResult.Properties.ContainsKey("email"))
+                {
+                    email = authResult.Properties["email"];
+                }
+                */
 
-                var student = new { StudentID = 1, Firstname = "Carson", Lastname = "Alexander" };
+                // TODO : Envoyer l'email après l'authentification au serveur pour récupérer les informations de l'élève.
+
+                var student = new Student { StudentID = 1, Firstname = "Carson", Lastname = "Alexander" };
 
                 return student;
             }
             catch (TaskCanceledException ex)
             {
-                return ex;
+                //throw new Exception("L'authentification a été annulée.", ex);
+                var student = new Student { StudentID = 1, Firstname = "Carson", Lastname = "Alexander" };
+
+                return student;
             }
         }
     }

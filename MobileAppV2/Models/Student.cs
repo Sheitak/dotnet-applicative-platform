@@ -1,6 +1,6 @@
 ﻿namespace MobileAppV2.Models
 {
-    internal class Student
+    public class Student
     {
         public int StudentID { get; set; }
 

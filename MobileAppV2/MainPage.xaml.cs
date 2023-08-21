@@ -1,21 +1,29 @@
-﻿using MobileAppV2.Services;
-
-namespace MobileAppV2
+﻿namespace MobileAppV2
 {
     public partial class MainPage : ContentPage
     {
-        AuthenticationProvider authenticationProvider = AuthenticationProvider.GetInstance();
-
         public MainPage()
         {
             InitializeComponent();
 
-            BindingContext = App.student;
+            var student = App.Student;
+
+            if (student != null)
+            {
+                BindingContext = student;
+                StudentName.Text = student.Firstname + " " + student.Lastname;
+
+            }
+            else
+            {
+                FailedLogin();
+            }
         }
 
-        private async void Login_Clicked(object sender, EventArgs e)
+        private async void FailedLogin()
         {
-            await authenticationProvider.LoginAsync();
+            await DisplayAlert("Aucune Connexion.", "L'authentification a échoué.", "OK");
+            await Shell.Current.GoToAsync("//LoginPage");
         }
     }
 }

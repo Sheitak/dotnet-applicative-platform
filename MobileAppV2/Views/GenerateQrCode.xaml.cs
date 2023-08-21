@@ -13,7 +13,7 @@ public partial class GenerateQrCode : ContentPage
     public GenerateQrCode()
     {
         InitializeComponent();
-        BindingContext = App.student;
+        BindingContext = App.Student;
 
         SignatureLabel.Text = $"QrCode pour le : {DateTime.Now:dd/MM/yyyy} à {DateTime.Now:HH:mm:ss}";
     }
@@ -26,7 +26,7 @@ public partial class GenerateQrCode : ContentPage
     private async void GenerateQrCodeWithMacAddress()
     {
         // TODO : Test Variable, replace with real value
-        var tempStudentId = 1;
+        var tempStudentId = App.Student.StudentID;
         var tempMacAddress = "82A70095380Z";
 
         // 82A70095380B

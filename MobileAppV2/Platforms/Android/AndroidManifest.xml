@@ -1,20 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 	<application android:allowBackup="true" android:icon="@mipmap/appicon" android:roundIcon="@mipmap/appicon_round" android:supportsRtl="true">
-	<!--
-		<activity android:name=".WebAuthenticationCallbackActivity" android:exported="true">
-			<intent-filter>
-				<action android:name="android.intent.action.VIEW" />
-				<category android:name="android.intent.category.DEFAULT" />
-				<category android:name="android.intent.category.BROWSABLE" />
-				<data android:scheme="myapp" />
-			</intent-filter>
-		</activity>
-	-->
+	    <!-- Définir l'activité de redirection personnalisée -->
+        <activity
+            android:name=".WebAuthenticationCallbackActivity"
+            android:exported="true">
+            <!-- Filtrer les URL de redirection basées sur le schéma ("myapp://") -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Définir le schéma de redirection ("myapp://") -->
+                <data
+                    android:scheme="myapp"
+                    android:host="auth" />
+            </intent-filter>
+        </activity>
 	</application>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL" />
+	<!-- Ajouter une requête pour autoriser les Custom Tabs -->
 	<queries>
 	  <intent>
 		<action android:name="android.support.customtabs.action.CustomTabsService" />

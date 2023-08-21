@@ -19,17 +19,18 @@
                 FontSize="28"
                 HorizontalOptions="Center" />
             <Label
+                Text="Aucune Connexion"
+                x:Name="StudentName"
+                SemanticProperties.HeadingLevel="Level1"
+                FontSize="24"
+                HorizontalOptions="Center" />
+            <Label
                 x:Name="AppType"
                 Text=".NET Multi-platform App UI V2"
                 SemanticProperties.HeadingLevel="Level2"
                 SemanticProperties.Description=".NET Multi-platform App UI V2"
                 FontSize="18"
                 HorizontalOptions="Center" />
-            <Button
-                x:Name="Login"
-                Text="Login"
-                Margin="30"
-                Clicked="Login_Clicked"/>
         </VerticalStackLayout>
     </ScrollView>
 

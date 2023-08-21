@@ -221,7 +221,7 @@ namespace WebAPI.Controllers
         /// <response code="201">Returns the newly created device</response>
         /// <response code="400">If the device is null</response>
         // <snippet_Create>
-        [Authorize]
+        //[Authorize]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
