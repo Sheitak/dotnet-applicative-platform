@@ -1,6 +1,7 @@
 ﻿using MobileAppV2.Models;
 using Newtonsoft.Json;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
 namespace MobileAppV2.Services
@@ -20,6 +21,8 @@ namespace MobileAppV2.Services
         internal async Task<Student> GetInformationsForGenerateQrCode(int id, string macAddress)
         {
             using var client = new HttpClient();
+            //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _auth.Token);
+
             HttpResponseMessage response = await client.GetAsync($"http://10.0.2.2:5283/api/Students/GetByIdWithMacAddress/{id}/{macAddress}");
 
             if (response.IsSuccessStatusCode)
@@ -94,6 +97,8 @@ namespace MobileAppV2.Services
             };
 
             using var client = new HttpClient();
+            //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _auth.Token);
+
             HttpResponseMessage response = await client.PostAsJsonAsync("http://10.0.2.2:5283/api/Devices", registerDevice);
             response.EnsureSuccessStatusCode();
 
