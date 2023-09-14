@@ -237,7 +237,7 @@ namespace WebAPI.Controllers
         /// <response code="201">Returns the newly created signature</response>
         /// <response code="400">If the signature is null</response>
         // <snippet_Create>
-        [Authorize]
+        //[Authorize]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

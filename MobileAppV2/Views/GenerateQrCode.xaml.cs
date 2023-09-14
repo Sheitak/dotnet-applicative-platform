@@ -27,7 +27,7 @@ public partial class GenerateQrCode : ContentPage
     {
         // TODO : Test Variable, replace with real value
         var tempStudentId = App.Student.StudentID;
-        var tempMacAddress = "82A70095380Z";
+        var tempMacAddress = "82A70095380B";
 
         // 82A70095380B
         var deviceMacAddress = GetMacAddress().ToString();

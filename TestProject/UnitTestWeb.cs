@@ -10,7 +10,7 @@ namespace TestProject
     public class UnitTestWeb
     {
         [Fact]
-        public void TestIndexAction_ReturnsViewResult()
+        public void TestStudentGetIndex()
         {
             // Arrange
             var loggerMock = new Mock<ILogger<HomeController>>();
@@ -25,7 +25,7 @@ namespace TestProject
         }
 
         [Fact]
-        public async Task TestDetailsAction_WithValidId_ReturnsViewResult()
+        public async Task TestStudentGetDetails()
         {
             // Arrange
             var loggerMock = new Mock<ILogger<HomeController>>();
@@ -43,7 +43,7 @@ namespace TestProject
         }
 
         [Fact]
-        public async Task TestDetailsAction_WithInvalidId_ReturnsErrorView()
+        public async Task TestStudentGetDetailsFailed()
         {
             // Arrange
             var loggerMock = new Mock<ILogger<HomeController>>();
