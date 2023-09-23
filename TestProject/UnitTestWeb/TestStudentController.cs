@@ -5,9 +5,9 @@ using WebAppMVC.Controllers;
 using WebAppMVC.Models;
 using WebAppMVC.Repositories;
 
-namespace TestProject
+namespace TestProject.UnitTestWeb
 {
-    public class UnitTestWeb
+    public class TestStudentController
     {
         [Fact]
         public void TestStudentGetIndex()

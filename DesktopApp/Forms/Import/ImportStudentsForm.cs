@@ -1,17 +1,20 @@
 ﻿using DesktopApp.Models;
 using DesktopApp.Services;
+using static DesktopApp.FormInterface;
 
 namespace DesktopApp.Forms
 {
     public partial class ImportStudentsForm : Form
     {
+        private readonly LoadEntitiesDelegate loadEntitiesDelegate;
         readonly DataSourceProvider dataSourceProvider = DataSourceProvider.GetInstance();
         Student student = new();
 
-        public ImportStudentsForm()
+        public ImportStudentsForm(LoadEntitiesDelegate loadEntitiesDelegate)
         {
             InitializeComponent();
             CenterToScreen();
+            this.loadEntitiesDelegate = loadEntitiesDelegate;
         }
 
         private async void CSVImportButton_Click(object sender, EventArgs e)
@@ -26,6 +29,11 @@ namespace DesktopApp.Forms
                 string filePath = openFileDialog.FileName;
                 List<string[]> csvData = ImportCsv(filePath, ';');
                 csvData.RemoveAt(0);
+                if (csvData.Count == 0 || csvData.Count < 2)
+                {
+                    MessageBox.Show("Le fichier CSV est vide ou ne correspond pas à la donnée attendue.");
+                    return;
+                }
                 foreach (string[] row in csvData)
                 {
                     var group = await dataSourceProvider.GetGroupByName(row[2]);
@@ -50,6 +58,8 @@ namespace DesktopApp.Forms
                 }
 
                 MessageBox.Show("Les étudiants ont été importés avec succès !");
+                loadEntitiesDelegate.Invoke();
+                Close();
             }
         }
 

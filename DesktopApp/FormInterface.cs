@@ -580,19 +580,19 @@ namespace DesktopApp
 
         private void ImportStudents_Click(object sender, EventArgs e)
         {
-            var importStudentsForm = new ImportStudentsForm();
+            var importStudentsForm = new ImportStudentsForm(ReloadStudents);
             importStudentsForm.Show();
         }
 
         private void ImportGroups_Click(object sender, EventArgs e)
         {
-            var importGroupsForm = new ImportGroupsForm();
+            var importGroupsForm = new ImportGroupsForm(ReloadGroups);
             importGroupsForm.Show();
         }
 
         private void ImportPromotions_Click(object sender, EventArgs e)
         {
-            var importPromotionsForm = new ImportPromotionsForm();
+            var importPromotionsForm = new ImportPromotionsForm(ReloadPromotions);
             importPromotionsForm.Show();
         }
 

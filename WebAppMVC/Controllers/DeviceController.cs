@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics;
 using WebAppMVC.Filters;
 using WebAppMVC.Models;
@@ -10,11 +11,13 @@ namespace WebAppMVC.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly DeviceRepository _deviceRepository;
+        private readonly StudentRepository _studentRepository;
 
-        public DeviceController(ILogger<HomeController> logger, DeviceRepository deviceRepository)
+        public DeviceController(ILogger<HomeController> logger, DeviceRepository deviceRepository, StudentRepository studentRepository)
         {
             _logger = logger;
             _deviceRepository = deviceRepository;
+            _studentRepository = studentRepository;
         }
 
         [JwtAuthorize]
@@ -54,6 +57,72 @@ namespace WebAppMVC.Controllers
                 ViewBag.ErrorMessage = $"Une erreur s'est produite lors de la récupération des détails de l'appareil : {ex.Message}";
                 return View("Error");
             }
+        }
+
+        public async Task<IActionResult> Create()
+        {
+            var students = new List<Student>();
+            try
+            {
+                var token = Request.Cookies["JwtToken"];
+
+                if (string.IsNullOrEmpty(token))
+                {
+                    ViewBag.ErrorMessage = "Token Bearer introuvable";
+                    return View("Error");
+                }
+
+                students = await _studentRepository.GetStudents(token);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = $"Une erreur s'est produite lors de la récupération de la liste des étudiants : {ex.Message}";
+                return View("Error");
+            }
+
+            var studentListItems = students.Select(s => new SelectListItem
+            {
+                Text = s.Firstname + ' ' + s.Lastname,
+                Value = s.StudentID.ToString()
+            }).ToList();
+
+            if (studentListItems != null)
+            {
+                ViewBag.StudentList = studentListItems;
+            }
+            else
+            {
+                ViewBag.StudentList = new List<SelectListItem>();
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        [JwtAuthorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Device device)
+        {
+            try
+            {
+                var token = Request.Cookies["JwtToken"];
+
+                if (string.IsNullOrEmpty(token))
+                {
+                    ViewBag.ErrorMessage = "Token Bearer introuvable";
+                    return View("Error");
+                }
+
+                await _deviceRepository.PostDevice(device, token);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = $"Une erreur s'est produite lors de la modification de l'appareil : {ex.Message}";
+                return View("Error");
+            }
+
+            //return RedirectToAction("Details", new { id = device.DeviceID });
+            return RedirectToAction("Index");
         }
 
         [JwtAuthorize]

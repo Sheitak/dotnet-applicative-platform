@@ -1,17 +1,20 @@
 ﻿using DesktopApp.Models;
 using DesktopApp.Services;
+using static DesktopApp.FormInterface;
 
 namespace DesktopApp.Forms
 {
     public partial class ImportPromotionsForm : Form
     {
+        private readonly LoadEntitiesDelegate loadEntitiesDelegate;
         readonly DataSourceProvider dataSourceProvider = DataSourceProvider.GetInstance();
         Promotion promotion = new();
 
-        public ImportPromotionsForm()
+        public ImportPromotionsForm(LoadEntitiesDelegate loadEntitiesDelegate)
         {
             InitializeComponent();
             CenterToScreen();
+            this.loadEntitiesDelegate = loadEntitiesDelegate;
         }
 
         private async void CSVImportButton_Click(object sender, EventArgs e)
@@ -26,12 +29,19 @@ namespace DesktopApp.Forms
                 string filePath = openFileDialog.FileName;
                 List<string[]> csvData = ImportCsv(filePath, ';');
                 csvData.RemoveAt(0);
+                if (csvData.Count == 0)
+                {
+                    MessageBox.Show("Le fichier CSV est vide ou ne correspond pas à la donnée attendue.");
+                    return;
+                }
                 foreach (string[] row in csvData)
                 {
                     promotion.Name = row[0];
                     await dataSourceProvider.CreatePromotion(promotion);
                 }
                 MessageBox.Show("Les promotions ont été importées avec succès !");
+                loadEntitiesDelegate.Invoke();
+                Close();
             }
         }
 

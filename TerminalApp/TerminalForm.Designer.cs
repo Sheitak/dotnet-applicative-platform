@@ -50,14 +50,16 @@
             // 
             dateLabel.AutoSize = true;
             dateLabel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            dateLabel.Location = new Point(298, 86);
+            dateLabel.Location = new Point(290, 88);
             dateLabel.Name = "dateLabel";
             dateLabel.Size = new Size(49, 21);
             dateLabel.TabIndex = 1;
             dateLabel.Text = "Echec";
+            dateLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // welcomeLabel
             // 
+            welcomeLabel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             welcomeLabel.AutoSize = true;
             welcomeLabel.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point);
             welcomeLabel.Location = new Point(125, 19);
@@ -65,6 +67,7 @@
             welcomeLabel.Size = new Size(384, 21);
             welcomeLabel.TabIndex = 0;
             welcomeLabel.Text = "Bienvenue ! Vous pouvez commencer à émarger :";
+            welcomeLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // signaturePanel
             // 

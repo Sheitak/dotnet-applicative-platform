@@ -40,5 +40,34 @@ namespace WebAppMVC.Repositories
 
             throw new Exception("Failed to retrieve device.");
         }
+
+        public async Task<Device> PostDevice(Device device, string token)
+        {
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            HttpResponseMessage response = await client.PostAsJsonAsync("https://localhost:7058/api/Devices", device);
+            response.EnsureSuccessStatusCode();
+
+            var responseString = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<Device>(responseString);
+
+            /*
+            return await response.Content.ReadAsAsync<Device>();
+
+            HttpResponseMessage response = await client.PutAsJsonAsync(
+                $"https://localhost:7058/api/Devices/{device.DeviceID}",
+                device
+            );
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseString = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<Device>(responseString);
+            }
+
+            throw new Exception("Failed to retrieve device.");
+            */
+        }
     }
 }
